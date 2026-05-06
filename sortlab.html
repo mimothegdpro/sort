@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SortLab — Algorithm Visualizer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080810;--surface:#0f0f1a;--card:#151525;--border:#1e1e35;
+  --accent:#00f5c4;--accent2:#7c3aed;--accent3:#f59e0b;--danger:#ef4444;
+  --text:#f0f0ff;--muted:#6b6b8a;--mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;--display:'Bebas Neue',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
+
+/* NOISE OVERLAY */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4}
+
+/* GRID BG */
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,245,196,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,196,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(8,8,16,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{display:flex;align-items:center;gap:12px}
+.nav-logo-img{width:36px;height:36px;border-radius:8px;background:var(--accent2);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.nav-logo-img img{width:100%;height:100%;object-fit:cover;display:none}
+.nav-logo-img .logo-fallback{font-family:var(--display);font-size:20px;color:#fff;letter-spacing:1px}
+.nav-logo-img.has-img img{display:block}
+.nav-logo-img.has-img .logo-fallback{display:none}
+.nav-title{font-family:var(--display);font-size:24px;letter-spacing:2px;color:var(--accent)}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;font-family:var(--mono);letter-spacing:0.05em;transition:color 0.2s}
+.nav-links a:hover{color:var(--accent)}
+
+/* HERO */
+.hero{position:relative;z-index:1;padding:100px 32px 60px;text-align:center}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:8px}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';height:1px;width:40px;background:var(--accent);opacity:0.4}
+.hero h1{font-family:var(--display);font-size:clamp(60px,10vw,120px);letter-spacing:4px;line-height:0.9;color:var(--text);margin-bottom:24px}
+.hero h1 em{color:var(--accent);font-style:normal}
+.hero p{font-size:16px;color:var(--muted);max-width:480px;margin:0 auto 48px;line-height:1.7;font-weight:300}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#000;font-family:var(--mono);font-size:13px;font-weight:700;padding:14px 32px;border-radius:4px;cursor:pointer;border:none;letter-spacing:0.1em;transition:all 0.2s;text-transform:uppercase}
+.hero-cta:hover{background:#00ddb0;transform:translateY(-2px)}
+.hero-cta svg{width:16px;height:16px}
+
+/* SETUP SECTION */
+#setup{position:relative;z-index:1;padding:40px 32px 80px;max-width:1100px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* STEP CARDS */
+.steps{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px}
+@media(max-width:700px){.steps{grid-template-columns:1fr}}
+.step-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;position:relative;overflow:hidden;transition:border-color 0.2s}
+.step-card:hover{border-color:rgba(0,245,196,0.2)}
+.step-card::before{content:attr(data-step);position:absolute;top:-10px;right:16px;font-family:var(--display);font-size:80px;color:rgba(0,245,196,0.04);line-height:1;pointer-events:none}
+.step-title{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:16px}
+.step-desc{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+
+/* AMOUNT SELECTOR */
+.amount-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.amount-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:var(--mono);font-size:13px;padding:10px 4px;cursor:pointer;transition:all 0.15s;text-align:center}
+.amount-btn:hover,.amount-btn.active{background:rgba(0,245,196,0.1);border-color:var(--accent);color:var(--accent)}
+.custom-amount{display:flex;gap:8px;margin-top:8px}
+.custom-amount input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:13px;padding:8px 12px;outline:none}
+.custom-amount input:focus{border-color:var(--accent)}
+
+/* NUMBER RANGE */
+.range-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.range-row label{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap;min-width:28px}
+.range-row input[type=range]{flex:1;accent-color:var(--accent)}
+.range-row span{font-family:var(--mono);font-size:12px;color:var(--accent);min-width:36px;text-align:right}
+.mode-row{display:flex;gap:8px;margin-top:12px}
+.mode-btn{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:var(--mono);font-size:11px;padding:8px;cursor:pointer;transition:all 0.15s;text-align:center;letter-spacing:0.05em}
+.mode-btn.active{background:rgba(124,58,237,0.15);border-color:var(--accent2);color:#c4b5fd}
+
+/* CUSTOM NUMBERS */
+.custom-input-wrap{margin-top:8px}
+.custom-input-wrap textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:13px;padding:10px 12px;resize:vertical;min-height:70px;outline:none;line-height:1.5}
+.custom-input-wrap textarea:focus{border-color:var(--accent)}
+.custom-input-wrap .hint{font-size:11px;color:var(--muted);margin-top:6px}
+
+/* ALGORITHM PICKER */
+.algo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:500px){.algo-grid{grid-template-columns:repeat(2,1fr)}}
+.algo-btn{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 10px;cursor:pointer;transition:all 0.2s;text-align:center;position:relative;overflow:hidden}
+.algo-btn:hover{border-color:rgba(0,245,196,0.3);transform:translateY(-1px)}
+.algo-btn.active{border-color:var(--accent);background:rgba(0,245,196,0.08)}
+.algo-btn.active::after{content:'✓';position:absolute;top:6px;right:8px;font-size:10px;color:var(--accent)}
+.algo-name{font-family:var(--mono);font-size:12px;color:var(--text);margin-bottom:4px;letter-spacing:0.05em}
+.algo-complexity{font-size:10px;color:var(--muted)}
+.algo-complexity em{font-style:italic;color:var(--accent3)}
+
+/* LAUNCH BTN */
+.launch-wrap{text-align:center;margin-top:40px}
+.launch-btn{background:linear-gradient(135deg,var(--accent2),#4f46e5);border:none;border-radius:8px;color:#fff;font-family:var(--display);font-size:28px;letter-spacing:3px;padding:18px 64px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.launch-btn:hover{transform:translateY(-2px);box-shadow:0 20px 40px rgba(124,58,237,0.3)}
+.launch-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+/* VISUALIZER */
+#visualizer{position:relative;z-index:1;padding:40px 32px 80px;max-width:1100px;margin:0 auto;display:none}
+.viz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:gap}
+.viz-algo-name{font-family:var(--display);font-size:48px;letter-spacing:3px;color:var(--accent)}
+.viz-stats{display:flex;gap:24px;align-items:center}
+.stat-pill{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-family:var(--mono);font-size:12px}
+.stat-pill .label{color:var(--muted);font-size:10px;margin-bottom:2px}
+.stat-pill .value{color:var(--accent)}
+
+/* CHART */
+.chart-container{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px 24px 12px;margin-bottom:24px;position:relative;overflow:hidden}
+.chart-container::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent),transparent)}
+.chart-bars{display:flex;align-items:flex-end;gap:2px;height:300px;padding-bottom:24px;position:relative}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.bar{width:100%;border-radius:3px 3px 0 0;transition:height 0.08s,background 0.08s;min-height:2px}
+.bar.default{background:linear-gradient(180deg,#7c3aed,#4f46e5)}
+.bar.comparing{background:linear-gradient(180deg,#f59e0b,#ef4444)!important}
+.bar.sorted{background:linear-gradient(180deg,#00f5c4,#00b894)!important}
+.bar.pivot{background:linear-gradient(180deg,#ef4444,#dc2626)!important}
+.bar-num{font-family:var(--mono);font-size:9px;color:var(--muted);margin-bottom:3px;transition:color 0.08s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center}
+
+/* CONTROLS */
+.viz-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.ctrl-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:12px;padding:10px 20px;cursor:pointer;transition:all 0.15s;letter-spacing:0.05em}
+.ctrl-btn:hover{border-color:var(--accent);color:var(--accent)}
+.ctrl-btn.primary{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.ctrl-btn.primary:hover{background:#00ddb0}
+.ctrl-btn.danger{border-color:#3a1a1a;color:var(--muted)}
+.ctrl-btn.danger:hover{border-color:var(--danger);color:var(--danger)}
+.speed-control{display:flex;align-items:center;gap:10px;flex:1;min-width:180px}
+.speed-control label{font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.speed-control input{flex:1;accent-color:var(--accent)}
+.speed-control span{font-family:var(--mono);font-size:11px;color:var(--accent);min-width:30px}
+
+/* INFO PANEL */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:600px){.info-grid{grid-template-columns:1fr}}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px}
+.info-card-title{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:12px}
+.complexity-table{width:100%;border-collapse:collapse}
+.complexity-table td{padding:6px 0;font-size:12px;border-bottom:1px solid var(--border)}
+.complexity-table td:first-child{color:var(--muted);font-family:var(--mono)}
+.complexity-table td:last-child{color:var(--accent3);font-family:var(--mono);text-align:right}
+.algo-desc{font-size:13px;color:var(--muted);line-height:1.7}
+
+/* PROGRESS */
+.progress-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:20px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width 0.1s;width:0%}
+
+/* STATUS */
+.status-line{font-family:var(--mono);font-size:12px;color:var(--muted);min-height:20px;margin-bottom:8px}
+.status-line.done{color:var(--accent)}
+
+/* SUPPORT SECTION */
+#support{position:relative;z-index:1;border-top:1px solid var(--border);padding:80px 32px;text-align:center}
+.support-inner{max-width:700px;margin:0 auto}
+.support-logo-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:32px}
+.support-logo{width:56px;height:56px;border-radius:12px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.support-logo img{width:100%;height:100%;object-fit:cover;display:none}
+.support-logo .logo-fallback-big{font-family:var(--display);font-size:28px;color:var(--accent)}
+.support-logo.has-img img{display:block}
+.support-logo.has-img .logo-fallback-big{display:none}
+.support-channel-name{font-family:var(--display);font-size:36px;letter-spacing:3px;color:var(--text)}
+.support-tagline{font-size:15px;color:var(--muted);margin-bottom:40px;line-height:1.6;max-width:440px;margin-left:auto;margin-right:auto}
+.support-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+.support-link{display:flex;align-items:center;gap:10px;padding:14px 28px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);text-decoration:none;font-family:var(--mono);font-size:13px;transition:all 0.2s;cursor:pointer}
+.support-link:hover{transform:translateY(-2px)}
+.support-link.youtube{border-color:#ff0000;color:#ff4444}
+.support-link.youtube:hover{background:rgba(255,0,0,0.08)}
+.support-link.tiktok{border-color:#69c9d0;color:#69c9d0}
+.support-link.tiktok:hover{background:rgba(105,201,208,0.08)}
+.support-link.paypal{border-color:#003087;color:#0079c1}
+.support-link.paypal:hover{background:rgba(0,121,193,0.08)}
+.support-link.ko-fi{border-color:#ff5e5b;color:#ff5e5b}
+.support-link.ko-fi:hover{background:rgba(255,94,91,0.08)}
+.support-link svg{width:20px;height:20px;flex-shrink:0}
+.support-edit-note{font-size:11px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-family:var(--mono);margin-top:8px;text-align:left;line-height:1.6}
+.support-edit-note strong{color:var(--accent)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:24px 32px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+footer p{font-size:12px;color:var(--muted);font-family:var(--mono)}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.fade-in{animation:fadeIn 0.5s ease forwards}
+.pulsing{animation:pulse 1s ease-in-out infinite}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-img" id="nav-logo-img">
+      <img src="" alt="Logo" id="nav-logo-src">
+      <span class="logo-fallback">SL</span>
+    </div>
+    <span class="nav-title">SORTLAB</span>
+  </div>
+  <div class="nav-links">
+    <a href="#setup">Configure</a>
+    <a href="#visualizer">Visualize</a>
+    <a href="#support">Support</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero fade-in">
+  <div class="hero-eyebrow">Algorithm Visualizer</div>
+  <h1>SORT<br><em>EVERY</em><br>THING</h1>
+  <p>Watch sorting algorithms battle through your data in real time. Configure your numbers, pick your algorithm, and see the magic happen.</p>
+  <button class="hero-cta" onclick="document.getElementById('setup').scrollIntoView({behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    Start Sorting
+  </button>
+</section>
+
+<!-- SETUP -->
+<section id="setup">
+  <div class="section-label">Step 1 — Configure your data</div>
+
+  <div class="steps">
+    <!-- AMOUNT -->
+    <div class="step-card" data-step="01">
+      <div class="step-title">// How many numbers?</div>
+      <div class="step-desc">Choose how many elements to sort. More elements = more chaos.</div>
+      <div class="amount-grid">
+        <button class="amount-btn" onclick="setAmount(5,this)">5</button>
+        <button class="amount-btn active" onclick="setAmount(10,this)">10</button>
+        <button class="amount-btn" onclick="setAmount(20,this)">20</button>
+        <button class="amount-btn" onclick="setAmount(50,this)">50</button>
+        <button class="amount-btn" onclick="setAmount(100,this)">100</button>
+      </div>
+      <div class="custom-amount">
+        <input type="number" id="custom-amount-input" placeholder="Custom (max 200)" min="2" max="200" oninput="setCustomAmount(this.value)">
+      </div>
+    </div>
+
+    <!-- NUMBER RANGE / CUSTOM -->
+    <div class="step-card" data-step="02">
+      <div class="step-title">// What numbers?</div>
+      <div class="step-desc">Set a random range or type your own specific numbers.</div>
+      <div class="mode-row" style="margin-bottom:16px">
+        <button class="mode-btn active" id="mode-random" onclick="setMode('random')">Random range</button>
+        <button class="mode-btn" id="mode-custom" onclick="setMode('custom')">Custom list</button>
+      </div>
+      <div id="random-config">
+        <div class="range-row">
+          <label>Min</label>
+          <input type="range" id="range-min" min="1" max="500" value="1" oninput="updateRange()">
+          <span id="range-min-val">1</span>
+        </div>
+        <div class="range-row">
+          <label>Max</label>
+          <input type="range" id="range-max" min="1" max="1000" value="100" oninput="updateRange()">
+          <span id="range-max-val">100</span>
+        </div>
+      </div>
+      <div id="custom-config" style="display:none">
+        <div class="custom-input-wrap">
+          <textarea id="custom-numbers" placeholder="1 5 3 9 2 7 4 8 6 10&#10;or comma separated: 1,5,3,9,2"></textarea>
+          <div class="hint">Separate with spaces or commas. Amount setting will be ignored.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALGORITHM PICKER -->
+  <div class="section-label">Step 2 — Pick your algorithm</div>
+  <div class="algo-grid" style="margin-bottom:40px">
+    <div class="algo-btn active" data-algo="bubble" onclick="selectAlgo('bubble',this)">
+      <div class="algo-name">Bubble Sort</div>
+      <div class="algo-complexity">Best: <em>O(n)</em> · Worst: <em>O(n²)</em></div>
+    </div>
+    <div class="algo-btn" data-algo="selection" onclick="selectAlgo('selection',this)">
+      <div class="algo-name">Selection Sort</div>
+      <div class="algo-complexity">Best: <em>O(n²)</em> · Worst: <em>O(n²)</em></div>
+    </div>
+    <div class="algo-btn" data-algo="merge" onclick="selectAlgo('merge',this)">
+      <div class="algo-name">Merge Sort</div>
+      <div class="algo-complexity">Best: <em>O(n log n)</em> · Worst: <em>O(n log n)</em></div>
+    </div>
+    <div class="algo-btn" data-algo="heap" onclick="selectAlgo('heap',this)">
+      <div class="algo-name">Heap Sort</div>
+      <div class="algo-complexity">Best: <em>O(n log n)</em> · Worst: <em>O(n log n)</em></div>
+    </div>
+    <div class="algo-btn" data-algo="bogo" onclick="selectAlgo('bogo',this)">
+      <div class="algo-name">Bogo Sort</div>
+      <div class="algo-complexity">Best: <em>O(n)</em> · Worst: <em>O(∞)</em></div>
+    </div>
+    <div class="algo-btn" data-algo="quick" onclick="selectAlgo('quick',this)">
+      <div class="algo-name">Quick Sort</div>
+      <div class="algo-complexity">Best: <em>O(n log n)</em> · Worst: <em>O(n²)</em></div>
+    </div>
+  </div>
+
+  <div class="launch-wrap">
+    <button class="launch-btn" id="launch-btn" onclick="launch()">LAUNCH VISUALIZER</button>
+  </div>
+</section>
+
+<!-- VISUALIZER -->
+<section id="visualizer">
+  <div class="viz-header">
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.2em;margin-bottom:6px">RUNNING</div>
+      <div class="viz-algo-name" id="viz-algo-name">BUBBLE SORT</div>
+    </div>
+    <div class="viz-stats">
+      <div class="stat-pill"><div class="label">COMPARISONS</div><div class="value" id="stat-comps">0</div></div>
+      <div class="stat-pill"><div class="label">SWAPS</div><div class="value" id="stat-swaps">0</div></div>
+      <div class="stat-pill"><div class="label">ELEMENTS</div><div class="value" id="stat-elems">0</div></div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+  <div class="status-line" id="status-line">Ready.</div>
+
+  <div class="chart-container">
+    <div class="chart-bars" id="chart-bars"></div>
+  </div>
+
+  <div class="viz-controls">
+    <button class="ctrl-btn primary" id="btn-play" onclick="playPause()">▶ Play</button>
+    <button class="ctrl-btn" id="btn-step-viz" onclick="stepOnce()">Step</button>
+    <button class="ctrl-btn danger" onclick="resetViz()">↺ Reset</button>
+    <button class="ctrl-btn" onclick="document.getElementById('setup').scrollIntoView({behavior:'smooth'})">← Back</button>
+    <div class="speed-control">
+      <label>Delay</label>
+      <input type="range" id="viz-speed" min="0" max="500" value="80" step="5">
+      <span id="viz-speed-label">80ms</span>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-card-title">// Complexity</div>
+      <table class="complexity-table" id="complexity-table">
+        <tr><td>Best case</td><td id="c-best">—</td></tr>
+        <tr><td>Average</td><td id="c-avg">—</td></tr>
+        <tr><td>Worst case</td><td id="c-worst">—</td></tr>
+        <tr><td>Space</td><td id="c-space">—</td></tr>
+        <tr><td>Stable</td><td id="c-stable">—</td></tr>
+      </table>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">// About this algorithm</div>
+      <p class="algo-desc" id="algo-desc">Select an algorithm to see its description.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT -->
+<section id="support">
+  <div class="support-inner">
+    <div class="support-logo-row">
+      <div class="support-logo" id="support-logo">
+        <img src="" id="support-logo-src" alt="Channel Logo">
+        <span class="logo-fallback-big">SL</span>
+      </div>
+      <div class="support-channel-name" id="channel-name">YOUR CHANNEL</div>
+    </div>
+    <p class="support-tagline" id="channel-tagline">If you enjoy SortLab, consider supporting the channel — it helps us make more free tools and videos for you.</p>
+    <div class="support-links">
+      <a class="support-link youtube" id="link-youtube" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+        YouTube
+      </a>
+      <a class="support-link tiktok" id="link-tiktok" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 3a4.6 4.6 0 0 1-4.5-4h-3.3v11.8L11.7 17a2.8 2.8 0 1 1-2.6-3.8c.3 0 .5 0 .8.1V10a6.2 6.2 0 0 0-.8 0A6.1 6.1 0 0 0 3 16.1a6.1 6.1 0 0 0 6.1 6.1 6.1 6.1 0 0 0 6.1-6.1V9.4a8 8 0 0 0 4.7 1.5V7.6a4.6 4.6 0 0 1-0.3 0z"/></svg>
+        TikTok
+      </a>
+      <a class="support-link paypal" id="link-paypal" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.1 21.5l.4-2.3.1-.4H6l1.4-9H12c2.7 0 4.6 1 5.2 3.1.7 2.6-.5 5.3-3.5 6.1-.5.2-1.1.2-1.7.2H10l-.4 2.3H7.1zM9.6 5.5H5.2L3 19h2.7l.4-2.5h2.1c1.2 0 2.4-.3 3.3-.9 2.4-1.5 3-4.4 1.8-6.5-.7-1.2-2-2.1-3.7-2.1-.1-.5-.3-1-.7-1.5z"/></svg>
+        PayPal
+      </a>
+      <a class="support-link ko-fi" id="link-kofi" href="#" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.9 7.6C23.5 5 21.7 3.4 19 3H2.7C1.5 3 .7 3.9.7 5.1v.2l1.7 12.2C2.7 19 3.8 20 5 20h9.7c1 0 1.8-.7 2-1.7l.3-2h.8c4.1 0 6.7-2.7 6.7-6.2 0-.8-.2-1.7-.6-2.5zm-7 5.3h-.7l.5-3.4h.7c1.2 0 1.9.5 1.9 1.6 0 1.2-.9 1.8-2.4 1.8z"/></svg>
+        Ko-fi
+      </a>
+    </div>
+    <div class="support-edit-note">
+      <strong>// To customize this section:</strong><br>
+      Change <strong>channel name</strong>: edit <code>id="channel-name"</code> text<br>
+      Change <strong>logo</strong>: set <code>id="nav-logo-src"</code> and <code>id="support-logo-src"</code> src to your image path<br>
+      Change <strong>links</strong>: update <code>href="#"</code> on each support-link anchor to your real URLs<br>
+      Change <strong>tagline</strong>: edit <code>id="channel-tagline"</code> text
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 SortLab — Built with ❤️</p>
+  <p style="color:var(--accent);font-size:11px">SORT EVERYTHING</p>
+</footer>
+
+<script>
+// ─── STATE ─────────────────────────────────────────────────
+let state = {
+  amount: 10, mode: 'random', minVal: 1, maxVal: 100,
+  algo: 'bubble', numbers: [], steps: [], stepIdx: 0,
+  comparisons: 0, swaps: 0, playing: false, timer: null, done: false
+};
+
+// ─── SETUP UI ──────────────────────────────────────────────
+function setAmount(n, btn) {
+  state.amount = n;
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('custom-amount-input').value = '';
+}
+
+function setCustomAmount(v) {
+  const n = parseInt(v);
+  if (n >= 2 && n <= 200) {
+    state.amount = n;
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+  }
+}
+
+function setMode(m) {
+  state.mode = m;
+  document.getElementById('mode-random').classList.toggle('active', m === 'random');
+  document.getElementById('mode-custom').classList.toggle('active', m === 'custom');
+  document.getElementById('random-config').style.display = m === 'random' ? 'block' : 'none';
+  document.getElementById('custom-config').style.display = m === 'custom' ? 'block' : 'none';
+}
+
+function updateRange() {
+  const min = parseInt(document.getElementById('range-min').value);
+  const max = parseInt(document.getElementById('range-max').value);
+  document.getElementById('range-min-val').textContent = min;
+  document.getElementById('range-max-val').textContent = max;
+  state.minVal = min; state.maxVal = max;
+  if (min >= max) document.getElementById('range-max').value = min + 1;
+}
+
+function selectAlgo(algo, btn) {
+  state.algo = algo;
+  document.querySelectorAll('.algo-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ─── GENERATE NUMBERS ─────────────────────────────────────
+function generateNumbers() {
+  if (state.mode === 'custom') {
+    const raw = document.getElementById('custom-numbers').value.trim();
+    if (!raw) return null;
+    const nums = raw.split(/[\s,]+/).map(Number).filter(n => !isNaN(n));
+    if (nums.length < 2) return null;
+    return nums;
+  }
+  const min = state.minVal, max = Math.max(state.minVal + 1, state.maxVal);
+  const arr = [];
+  for (let i = 0; i < state.amount; i++) arr.push(Math.floor(Math.random() * (max - min + 1)) + min);
+  return arr;
+}
+
+// ─── ALGO INFO ────────────────────────────────────────────
+const ALGO_INFO = {
+  bubble:    { name:'BUBBLE SORT',    best:'O(n)',       avg:'O(n²)',      worst:'O(n²)',      space:'O(1)',   stable:'Yes', desc:'Bubble sort repeatedly steps through the list, compares adjacent elements, and swaps them if they\'re in the wrong order. Simple but inefficient for large datasets — like slowly bubbling the biggest values to the top.' },
+  selection: { name:'SELECTION SORT', best:'O(n²)',      avg:'O(n²)',      worst:'O(n²)',      space:'O(1)',   stable:'No',  desc:'Selection sort finds the minimum element and places it at the beginning, then repeats for the remaining list. Always O(n²) comparisons regardless of input — predictable but slow.' },
+  merge:     { name:'MERGE SORT',     best:'O(n log n)', avg:'O(n log n)', worst:'O(n log n)', space:'O(n)',   stable:'Yes', desc:'Merge sort divides the array in half, recursively sorts each half, then merges them. Guaranteed O(n log n) performance in all cases — excellent for large datasets. Requires extra memory.' },
+  heap:      { name:'HEAP SORT',      best:'O(n log n)', avg:'O(n log n)', worst:'O(n log n)', space:'O(1)',   stable:'No',  desc:'Heap sort builds a max-heap from the data, then repeatedly extracts the maximum. Combines the time efficiency of merge sort with the space efficiency of selection sort. In-place and reliable.' },
+  bogo:      { name:'BOGO SORT',      best:'O(n)',       avg:'O((n+1)!)',  worst:'O(∞)',       space:'O(1)',   stable:'No',  desc:'Bogo sort randomly shuffles the array and checks if it\'s sorted. Repeat until lucky. Absolutely terrible in practice — expected time is O((n+1)!) — but delightfully chaotic to watch. Use small arrays!' },
+  quick:     { name:'QUICK SORT',     best:'O(n log n)', avg:'O(n log n)', worst:'O(n²)',      space:'O(log n)',stable:'No', desc:'Quick sort picks a pivot, partitions elements around it, and recursively sorts each partition. Very fast in practice with good pivot selection. The O(n²) worst case only hits with bad pivots (already sorted data).' },
+};
+
+// ─── STEP GENERATORS ─────────────────────────────────────
+function genBubble(arr) {
+  const steps = [], a = [...arr];
+  for (let i = 0; i < a.length; i++) {
+    for (let j = 0; j < a.length - i - 1; j++) {
+      steps.push({ type:'compare', idx:[j, j+1], arr:[...a] });
+      if (a[j] > a[j+1]) { [a[j],a[j+1]] = [a[j+1],a[j]]; steps.push({ type:'swap', idx:[j,j+1], arr:[...a] }); }
+    }
+    steps.push({ type:'sorted-mark', idx:[a.length-1-i], arr:[...a] });
+  }
+  steps.push({ type:'done', arr:[...a] });
+  return steps;
+}
+
+function genSelection(arr) {
+  const steps = [], a = [...arr];
+  for (let i = 0; i < a.length; i++) {
+    let min = i;
+    for (let j = i+1; j < a.length; j++) {
+      steps.push({ type:'compare', idx:[min,j], arr:[...a] });
+      if (a[j] < a[min]) min = j;
+    }
+    if (min !== i) { [a[i],a[min]] = [a[min],a[i]]; steps.push({ type:'swap', idx:[i,min], arr:[...a] }); }
+    steps.push({ type:'sorted-mark', idx:[i], arr:[...a] });
+  }
+  steps.push({ type:'done', arr:[...a] });
+  return steps;
+}
+
+function genMerge(arr) {
+  const steps = [], a = [...arr];
+  function merge(l, m, r) {
+    const left = a.slice(l, m+1), right = a.slice(m+1, r+1);
+    let i=0,j=0,k=l;
+    while(i<left.length&&j<right.length){
+      steps.push({type:'compare',idx:[l+i,m+1+j],arr:[...a]});
+      if(left[i]<=right[j]){a[k++]=left[i++];}else{a[k++]=right[j++];}
+      steps.push({type:'swap',idx:[k-1],arr:[...a]});
+    }
+    while(i<left.length){a[k++]=left[i++];steps.push({type:'swap',idx:[k-1],arr:[...a]});}
+    while(j<right.length){a[k++]=right[j++];steps.push({type:'swap',idx:[k-1],arr:[...a]});}
+  }
+  function sort(l,r){if(l>=r)return;const m=Math.floor((l+r)/2);sort(l,m);sort(m+1,r);merge(l,m,r);}
+  sort(0,a.length-1);
+  steps.push({type:'done',arr:[...a]});
+  return steps;
+}
+
+function genHeap(arr) {
+  const steps = [], a = [...arr], n = a.length;
+  function heapify(n, i) {
+    let max=i,l=2*i+1,r=2*i+2;
+    if(l<n){steps.push({type:'compare',idx:[max,l],arr:[...a]});if(a[l]>a[max])max=l;}
+    if(r<n){steps.push({type:'compare',idx:[max,r],arr:[...a]});if(a[r]>a[max])max=r;}
+    if(max!==i){[a[i],a[max]]=[a[max],a[i]];steps.push({type:'swap',idx:[i,max],arr:[...a]});heapify(n,max);}
+  }
+  for(let i=Math.floor(n/2)-1;i>=0;i--)heapify(n,i);
+  for(let i=n-1;i>0;i--){[a[0],a[i]]=[a[i],a[0]];steps.push({type:'swap',idx:[0,i],arr:[...a]});steps.push({type:'sorted-mark',idx:[i],arr:[...a]});heapify(i,0);}
+  steps.push({type:'done',arr:[...a]});
+  return steps;
+}
+
+function genBogo(arr) {
+  const steps = [], a = [...arr];
+  const sorted = [...arr].sort((x,y)=>x-y);
+  const isSorted = () => a.every((v,i)=>v===sorted[i]);
+  let attempts = 0, MAX = 5000;
+  while(!isSorted() && attempts++ < MAX) {
+    for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+    steps.push({type:'swap',idx:[],arr:[...a]});
+  }
+  steps.push({type:'done',arr:[...a]});
+  return steps;
+}
+
+function genQuick(arr) {
+  const steps = [], a = [...arr];
+  function partition(l,r){
+    const pivot=a[r]; let i=l-1;
+    steps.push({type:'pivot',idx:[r],arr:[...a]});
+    for(let j=l;j<r;j++){
+      steps.push({type:'compare',idx:[j,r],arr:[...a]});
+      if(a[j]<=pivot){i++;[a[i],a[j]]=[a[j],a[i]];if(i!==j)steps.push({type:'swap',idx:[i,j],arr:[...a]});}
+    }
+    [a[i+1],a[r]]=[a[r],a[i+1]];steps.push({type:'swap',idx:[i+1,r],arr:[...a]});
+    return i+1;
+  }
+  function sort(l,r){if(l>=r)return;const p=partition(l,r);steps.push({type:'sorted-mark',idx:[p],arr:[...a]});sort(l,p-1);sort(p+1,r);}
+  sort(0,a.length-1);
+  steps.push({type:'done',arr:[...a]});
+  return steps;
+}
+
+function generateSteps(arr, algo) {
+  switch(algo){
+    case 'bubble': return genBubble(arr);
+    case 'selection': return genSelection(arr);
+    case 'merge': return genMerge(arr);
+    case 'heap': return genHeap(arr);
+    case 'bogo': return genBogo(arr);
+    case 'quick': return genQuick(arr);
+  }
+}
+
+// ─── RENDER ───────────────────────────────────────────────
+let sortedIndices = new Set();
+
+function renderBars(arr, highlight=[], sortedSet=new Set()) {
+  const container = document.getElementById('chart-bars');
+  const maxVal = Math.max(...arr);
+  const showLabels = arr.length <= 30;
+  if (container.children.length !== arr.length) {
+    container.innerHTML = '';
+    arr.forEach((_,i) => {
+      const wrap = document.createElement('div'); wrap.className='bar-wrap';
+      const num = document.createElement('div'); num.className='bar-num';
+      const bar = document.createElement('div'); bar.className='bar default';
+      wrap.append(num,bar); container.appendChild(wrap);
+    });
+  }
+  arr.forEach((v,i) => {
+    const wrap = container.children[i];
+    const bar = wrap.querySelector('.bar');
+    const num = wrap.querySelector('.bar-num');
+    const h = Math.max(2, Math.round((v / maxVal) * 280));
+    bar.style.height = h + 'px';
+    if (showLabels) num.textContent = v; else num.textContent = '';
+    bar.className = 'bar';
+    if (sortedSet.has(i)) bar.classList.add('sorted');
+    else if (highlight.includes(i)) bar.classList.add('comparing');
+    else bar.classList.add('default');
+  });
+}
+
+// ─── LAUNCH ───────────────────────────────────────────────
+function launch() {
+  const nums = generateNumbers();
+  if (!nums) { alert('Please enter valid numbers first.'); return; }
+  const info = ALGO_INFO[state.algo];
+  state.numbers = nums;
+  state.steps = generateSteps(nums, state.algo);
+  state.stepIdx = 0;
+  state.comparisons = 0;
+  state.swaps = 0;
+  state.playing = false;
+  state.done = false;
+  sortedIndices = new Set();
+  clearInterval(state.timer);
+
+  document.getElementById('viz-algo-name').textContent = info.name;
+  document.getElementById('stat-elems').textContent = nums.length;
+  document.getElementById('stat-comps').textContent = '0';
+  document.getElementById('stat-swaps').textContent = '0';
+  document.getElementById('c-best').textContent = info.best;
+  document.getElementById('c-avg').textContent = info.avg;
+  document.getElementById('c-worst').textContent = info.worst;
+  document.getElementById('c-space').textContent = info.space;
+  document.getElementById('c-stable').textContent = info.stable;
+  document.getElementById('algo-desc').textContent = info.desc;
+  document.getElementById('progress-bar').style.width = '0%';
+  document.getElementById('status-line').textContent = 'Ready — press Play to begin.';
+  document.getElementById('status-line').className = 'status-line';
+  document.getElementById('btn-play').textContent = '▶ Play';
+
+  const viz = document.getElementById('visualizer');
+  viz.style.display = 'block';
+  viz.classList.add('fade-in');
+  viz.scrollIntoView({ behavior: 'smooth' });
+
+  renderBars(nums, [], new Set());
+}
+
+// ─── STEP ────────────────────────────────────────────────
+function applyStep() {
+  if (state.stepIdx >= state.steps.length) { finishSort(); return; }
+  const step = state.steps[state.stepIdx++];
+  const pct = Math.round((state.stepIdx / state.steps.length) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+
+  if (step.type === 'compare') { state.comparisons++; document.getElementById('stat-comps').textContent = state.comparisons; }
+  if (step.type === 'swap') { state.swaps++; document.getElementById('stat-swaps').textContent = state.swaps; }
+  if (step.type === 'sorted-mark') { step.idx.forEach(i => sortedIndices.add(i)); }
+  if (step.type === 'done') { finishSort(); return; }
+
+  renderBars(step.arr, step.idx || [], sortedIndices);
+  document.getElementById('status-line').textContent = step.type === 'compare' ? `Comparing positions ${step.idx.join(' and ')}` : step.type === 'swap' ? `Swap at position${step.idx.length > 1 ? 's ' + step.idx.join(', ') : ' ' + step.idx[0]}` : step.type === 'pivot' ? `Pivot selected at position ${step.idx[0]}` : '...';
+}
+
+function finishSort() {
+  state.done = true;
+  state.playing = false;
+  clearInterval(state.timer);
+  document.getElementById('btn-play').textContent = '▶ Play';
+  document.getElementById('progress-bar').style.width = '100%';
+  const finalArr = state.steps[state.steps.length - 1].arr;
+  sortedIndices = new Set(finalArr.map((_,i)=>i));
+  renderBars(finalArr, [], sortedIndices);
+  const sl = document.getElementById('status-line');
+  sl.textContent = `✓ Sorted in ${state.comparisons} comparisons and ${state.swaps} swaps.`;
+  sl.className = 'status-line done';
+}
+
+function stepOnce() { if (!state.done) applyStep(); }
+
+function playPause() {
+  if (state.done) return;
+  state.playing = !state.playing;
+  document.getElementById('btn-play').textContent = state.playing ? '⏸ Pause' : '▶ Play';
+  if (state.playing) {
+    const delay = parseInt(document.getElementById('viz-speed').value);
+    if (delay === 0) { while(!state.done) applyStep(); return; }
+    state.timer = setInterval(() => { if (state.done || !state.playing) { clearInterval(state.timer); return; } applyStep(); }, delay);
+  } else {
+    clearInterval(state.timer);
+  }
+}
+
+function resetViz() {
+  clearInterval(state.timer);
+  state.steps = generateSteps(state.numbers, state.algo);
+  state.stepIdx = 0; state.comparisons = 0; state.swaps = 0;
+  state.playing = false; state.done = false; sortedIndices = new Set();
+  document.getElementById('btn-play').textContent = '▶ Play';
+  document.getElementById('stat-comps').textContent = '0';
+  document.getElementById('stat-swaps').textContent = '0';
+  document.getElementById('progress-bar').style.width = '0%';
+  document.getElementById('status-line').textContent = 'Reset — press Play to begin.';
+  document.getElementById('status-line').className = 'status-line';
+  renderBars(state.numbers, [], new Set());
+}
+
+document.getElementById('viz-speed').addEventListener('input', function() {
+  document.getElementById('viz-speed-label').textContent = this.value + 'ms';
+  if (state.playing) { clearInterval(state.timer); state.playing = false; document.getElementById('btn-play').textContent = '▶ Play'; playPause(); }
+});
+</script>
+</body>
+</html>
