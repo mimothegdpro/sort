@@ -14,25 +14,22 @@
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
-
-/* NOISE OVERLAY */
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4}
-
-/* GRID BG */
 body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,245,196,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,196,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
 
 /* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(8,8,16,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px}
+nav{position:sticky;top:0;z-index:100;background:rgba(8,8,16,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px}
 .nav-logo{display:flex;align-items:center;gap:12px}
 .nav-logo-img{width:36px;height:36px;border-radius:8px;background:var(--accent2);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
 .nav-logo-img img{width:100%;height:100%;object-fit:cover;display:none}
-.nav-logo-img .logo-fallback{font-family:var(--display);font-size:20px;color:#fff;letter-spacing:1px}
+.nav-logo-img .logo-fallback{font-family:var(--display);font-size:18px;color:#fff}
 .nav-logo-img.has-img img{display:block}
 .nav-logo-img.has-img .logo-fallback{display:none}
 .nav-title{font-family:var(--display);font-size:24px;letter-spacing:2px;color:var(--accent)}
 .nav-links{display:flex;gap:24px;align-items:center}
-.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;font-family:var(--mono);letter-spacing:0.05em;transition:color 0.2s}
+.nav-links a{font-size:12px;color:var(--muted);text-decoration:none;font-family:var(--mono);letter-spacing:0.05em;transition:color 0.2s}
 .nav-links a:hover{color:var(--accent)}
+.nav-badge{font-size:10px;background:rgba(0,245,196,0.1);color:var(--accent);border:1px solid rgba(0,245,196,0.2);border-radius:4px;padding:2px 8px;font-family:var(--mono);margin-left:8px}
 
 /* HERO */
 .hero{position:relative;z-index:1;padding:100px 32px 60px;text-align:center}
@@ -40,17 +37,20 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,16,0.85);backdrop-filt
 .hero-eyebrow::before,.hero-eyebrow::after{content:'';height:1px;width:40px;background:var(--accent);opacity:0.4}
 .hero h1{font-family:var(--display);font-size:clamp(60px,10vw,120px);letter-spacing:4px;line-height:0.9;color:var(--text);margin-bottom:24px}
 .hero h1 em{color:var(--accent);font-style:normal}
-.hero p{font-size:16px;color:var(--muted);max-width:480px;margin:0 auto 48px;line-height:1.7;font-weight:300}
+.hero-sub{font-size:16px;color:var(--muted);max-width:520px;margin:0 auto 48px;line-height:1.7;font-weight:300}
 .hero-cta{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#000;font-family:var(--mono);font-size:13px;font-weight:700;padding:14px 32px;border-radius:4px;cursor:pointer;border:none;letter-spacing:0.1em;transition:all 0.2s;text-transform:uppercase}
 .hero-cta:hover{background:#00ddb0;transform:translateY(-2px)}
-.hero-cta svg{width:16px;height:16px}
+.hero-stats{display:flex;gap:32px;justify-content:center;margin-top:48px;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat-val{font-family:var(--display);font-size:40px;letter-spacing:2px;color:var(--accent)}
+.hero-stat-lbl{font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:0.1em}
 
-/* SETUP SECTION */
-#setup{position:relative;z-index:1;padding:40px 32px 80px;max-width:1100px;margin:0 auto}
+/* SETUP */
+#setup{position:relative;z-index:1;padding:40px 32px 80px;max-width:1200px;margin:0 auto}
 .section-label{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* STEP CARDS */
+/* STEPS */
 .steps{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px}
 @media(max-width:700px){.steps{grid-template-columns:1fr}}
 .step-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;position:relative;overflow:hidden;transition:border-color 0.2s}
@@ -59,98 +59,140 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,16,0.85);backdrop-filt
 .step-title{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:16px}
 .step-desc{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6}
 
-/* AMOUNT SELECTOR */
-.amount-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
-.amount-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:var(--mono);font-size:13px;padding:10px 4px;cursor:pointer;transition:all 0.15s;text-align:center}
+/* AMOUNT */
+.amount-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:12px}
+.amount-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:var(--mono);font-size:12px;padding:9px 4px;cursor:pointer;transition:all 0.15s;text-align:center}
 .amount-btn:hover,.amount-btn.active{background:rgba(0,245,196,0.1);border-color:var(--accent);color:var(--accent)}
 .custom-amount{display:flex;gap:8px;margin-top:8px}
 .custom-amount input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:13px;padding:8px 12px;outline:none}
 .custom-amount input:focus{border-color:var(--accent)}
 
-/* NUMBER RANGE */
-.range-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+/* DATA ORDER */
+.order-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.order-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:var(--mono);font-size:10px;padding:8px 4px;cursor:pointer;transition:all 0.15s;text-align:center;letter-spacing:0.05em}
+.order-btn:hover,.order-btn.active{background:rgba(124,58,237,0.15);border-color:var(--accent2);color:#c4b5fd}
+
+/* RANGE */
+.range-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .range-row label{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap;min-width:28px}
 .range-row input[type=range]{flex:1;accent-color:var(--accent)}
-.range-row span{font-family:var(--mono);font-size:12px;color:var(--accent);min-width:36px;text-align:right}
-.mode-row{display:flex;gap:8px;margin-top:12px}
-.mode-btn{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:var(--mono);font-size:11px;padding:8px;cursor:pointer;transition:all 0.15s;text-align:center;letter-spacing:0.05em}
+.range-row span{font-family:var(--mono);font-size:12px;color:var(--accent);min-width:40px;text-align:right}
+.mode-row{display:flex;gap:8px;margin-bottom:16px}
+.mode-btn{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:var(--mono);font-size:11px;padding:8px;cursor:pointer;transition:all 0.15s;text-align:center;letter-spacing:0.03em}
 .mode-btn.active{background:rgba(124,58,237,0.15);border-color:var(--accent2);color:#c4b5fd}
-
-/* CUSTOM NUMBERS */
-.custom-input-wrap{margin-top:8px}
 .custom-input-wrap textarea{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:13px;padding:10px 12px;resize:vertical;min-height:70px;outline:none;line-height:1.5}
 .custom-input-wrap textarea:focus{border-color:var(--accent)}
-.custom-input-wrap .hint{font-size:11px;color:var(--muted);margin-top:6px}
+.hint{font-size:11px;color:var(--muted);margin-top:6px}
 
-/* ALGORITHM PICKER */
-.algo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+/* ALGO GRID */
+.algo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:40px}
+@media(max-width:800px){.algo-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:500px){.algo-grid{grid-template-columns:repeat(2,1fr)}}
 .algo-btn{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 10px;cursor:pointer;transition:all 0.2s;text-align:center;position:relative;overflow:hidden}
-.algo-btn:hover{border-color:rgba(0,245,196,0.3);transform:translateY(-1px)}
+.algo-btn:hover{border-color:rgba(0,245,196,0.3);transform:translateY(-2px);background:rgba(0,245,196,0.04)}
 .algo-btn.active{border-color:var(--accent);background:rgba(0,245,196,0.08)}
 .algo-btn.active::after{content:'✓';position:absolute;top:6px;right:8px;font-size:10px;color:var(--accent)}
-.algo-name{font-family:var(--mono);font-size:12px;color:var(--text);margin-bottom:4px;letter-spacing:0.05em}
+.algo-btn.danger-algo{border-color:rgba(239,68,68,0.3)}
+.algo-btn.danger-algo:hover{border-color:var(--danger)}
+.algo-btn.danger-algo.active{border-color:var(--danger);background:rgba(239,68,68,0.08)}
+.algo-btn.danger-algo.active::after{color:var(--danger)}
+.algo-name{font-family:var(--mono);font-size:11px;color:var(--text);margin-bottom:4px;letter-spacing:0.03em}
 .algo-complexity{font-size:10px;color:var(--muted)}
 .algo-complexity em{font-style:italic;color:var(--accent3)}
+.algo-tag{font-size:9px;padding:1px 6px;border-radius:99px;margin-top:5px;display:inline-block}
+.algo-tag.fast{background:rgba(0,245,196,0.1);color:var(--accent);border:1px solid rgba(0,245,196,0.2)}
+.algo-tag.slow{background:rgba(239,68,68,0.1);color:var(--danger);border:1px solid rgba(239,68,68,0.2)}
+.algo-tag.fun{background:rgba(245,158,11,0.1);color:var(--accent3);border:1px solid rgba(245,158,11,0.2)}
+.algo-tag.medium{background:rgba(124,58,237,0.1);color:#c4b5fd;border:1px solid rgba(124,58,237,0.2)}
 
-/* LAUNCH BTN */
+/* LAUNCH */
 .launch-wrap{text-align:center;margin-top:40px}
 .launch-btn{background:linear-gradient(135deg,var(--accent2),#4f46e5);border:none;border-radius:8px;color:#fff;font-family:var(--display);font-size:28px;letter-spacing:3px;padding:18px 64px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
 .launch-btn:hover{transform:translateY(-2px);box-shadow:0 20px 40px rgba(124,58,237,0.3)}
 .launch-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
 
 /* VISUALIZER */
-#visualizer{position:relative;z-index:1;padding:40px 32px 80px;max-width:1100px;margin:0 auto;display:none}
-.viz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:gap}
-.viz-algo-name{font-family:var(--display);font-size:48px;letter-spacing:3px;color:var(--accent)}
-.viz-stats{display:flex;gap:24px;align-items:center}
-.stat-pill{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-family:var(--mono);font-size:12px}
-.stat-pill .label{color:var(--muted);font-size:10px;margin-bottom:2px}
-.stat-pill .value{color:var(--accent)}
+#visualizer{position:relative;z-index:1;padding:40px 32px 80px;max-width:1200px;margin:0 auto;display:none}
+.viz-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:16px}
+.viz-algo-name{font-family:var(--display);font-size:42px;letter-spacing:3px;color:var(--accent)}
+.viz-algo-tag{font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:4px}
+.viz-stats{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.stat-pill{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-family:var(--mono);font-size:11px;min-width:80px}
+.stat-pill .label{color:var(--muted);font-size:9px;margin-bottom:2px;letter-spacing:0.1em;text-transform:uppercase}
+.stat-pill .value{color:var(--accent);font-size:16px;font-weight:700}
 
 /* CHART */
-.chart-container{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px 24px 12px;margin-bottom:24px;position:relative;overflow:hidden}
+.chart-container{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 16px 8px;margin-bottom:20px;position:relative;overflow:hidden}
 .chart-container::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent),transparent)}
-.chart-bars{display:flex;align-items:flex-end;gap:2px;height:300px;padding-bottom:24px;position:relative}
-.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
-.bar{width:100%;border-radius:3px 3px 0 0;transition:height 0.08s,background 0.08s;min-height:2px}
+.chart-bars{display:flex;align-items:flex-end;gap:1px;height:300px;padding-bottom:20px;position:relative}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0;position:relative}
+.bar{width:100%;border-radius:2px 2px 0 0;transition:height 0.06s,background 0.06s;min-height:2px}
 .bar.default{background:linear-gradient(180deg,#7c3aed,#4f46e5)}
 .bar.comparing{background:linear-gradient(180deg,#f59e0b,#ef4444)!important}
 .bar.sorted{background:linear-gradient(180deg,#00f5c4,#00b894)!important}
 .bar.pivot{background:linear-gradient(180deg,#ef4444,#dc2626)!important}
-.bar-num{font-family:var(--mono);font-size:9px;color:var(--muted);margin-bottom:3px;transition:color 0.08s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center}
+.bar.current{background:linear-gradient(180deg,#fff,#c4b5fd)!important}
+.bar-num{font-family:var(--mono);font-size:9px;color:var(--muted);margin-bottom:2px;transition:color 0.06s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center}
+
+/* LEGEND */
+.legend{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:var(--muted)}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.legend-dot.default{background:linear-gradient(135deg,#7c3aed,#4f46e5)}
+.legend-dot.comparing{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.legend-dot.sorted{background:linear-gradient(135deg,#00f5c4,#00b894)}
+.legend-dot.pivot{background:#ef4444}
+.legend-dot.current{background:#fff}
 
 /* CONTROLS */
-.viz-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
-.ctrl-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:12px;padding:10px 20px;cursor:pointer;transition:all 0.15s;letter-spacing:0.05em}
+.viz-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.ctrl-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:12px;padding:9px 18px;cursor:pointer;transition:all 0.15s;letter-spacing:0.05em;white-space:nowrap}
 .ctrl-btn:hover{border-color:var(--accent);color:var(--accent)}
 .ctrl-btn.primary{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
-.ctrl-btn.primary:hover{background:#00ddb0}
+.ctrl-btn.primary:hover{background:#00ddb0;color:#000}
 .ctrl-btn.danger{border-color:#3a1a1a;color:var(--muted)}
 .ctrl-btn.danger:hover{border-color:var(--danger);color:var(--danger)}
-.speed-control{display:flex;align-items:center;gap:10px;flex:1;min-width:180px}
+.ctrl-btn:disabled{opacity:0.3;cursor:not-allowed}
+.speed-control{display:flex;align-items:center;gap:10px;flex:1;min-width:200px}
 .speed-control label{font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
 .speed-control input{flex:1;accent-color:var(--accent)}
-.speed-control span{font-family:var(--mono);font-size:11px;color:var(--accent);min-width:30px}
+.speed-control span{font-family:var(--mono);font-size:11px;color:var(--accent);min-width:36px;text-align:right}
 
-/* INFO PANEL */
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
-@media(max-width:600px){.info-grid{grid-template-columns:1fr}}
+/* INFO PANELS */
+.info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:800px){.info-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.info-grid{grid-template-columns:1fr}}
 .info-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px}
 .info-card-title{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:12px}
 .complexity-table{width:100%;border-collapse:collapse}
-.complexity-table td{padding:6px 0;font-size:12px;border-bottom:1px solid var(--border)}
-.complexity-table td:first-child{color:var(--muted);font-family:var(--mono)}
+.complexity-table td{padding:5px 0;font-size:12px;border-bottom:1px solid var(--border)}
+.complexity-table td:last-child{border-bottom:none}
+.complexity-table td:first-child{color:var(--muted);font-family:var(--mono);font-size:11px}
 .complexity-table td:last-child{color:var(--accent3);font-family:var(--mono);text-align:right}
 .algo-desc{font-size:13px;color:var(--muted);line-height:1.7}
+.use-cases{list-style:none;padding:0}
+.use-cases li{font-size:12px;color:var(--muted);padding:4px 0;border-bottom:1px solid var(--border);padding-left:14px;position:relative;line-height:1.5}
+.use-cases li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:10px;top:5px}
 
 /* PROGRESS */
-.progress-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:20px;overflow:hidden}
+.progress-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px;overflow:hidden}
 .progress-bar{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;transition:width 0.1s;width:0%}
 
 /* STATUS */
 .status-line{font-family:var(--mono);font-size:12px;color:var(--muted);min-height:20px;margin-bottom:8px}
 .status-line.done{color:var(--accent)}
+
+/* HISTORY LOG */
+.log-panel{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.log-header{padding:10px 16px;font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.log-body{max-height:120px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.log-row{display:flex;align-items:center;gap:12px;padding:5px 16px;border-bottom:1px solid rgba(30,30,53,0.5);font-family:var(--mono);font-size:11px;color:var(--muted)}
+.log-row:last-child{border-bottom:none}
+.log-row .li{color:#3a3a50;min-width:50px;font-size:10px}
+.log-type{padding:1px 6px;border-radius:4px;font-size:9px;min-width:60px;text-align:center}
+.log-type.compare{background:rgba(245,158,11,0.1);color:var(--accent3);border:1px solid rgba(245,158,11,0.2)}
+.log-type.swap{background:rgba(239,68,68,0.1);color:var(--danger);border:1px solid rgba(239,68,68,0.2)}
+.log-type.sorted{background:rgba(0,245,196,0.1);color:var(--accent);border:1px solid rgba(0,245,196,0.2)}
 
 /* SUPPORT SECTION */
 #support{position:relative;z-index:1;border-top:1px solid var(--border);padding:80px 32px;text-align:center}
@@ -162,39 +204,26 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,8,16,0.85);backdrop-filt
 .support-logo.has-img img{display:block}
 .support-logo.has-img .logo-fallback-big{display:none}
 .support-channel-name{font-family:var(--display);font-size:36px;letter-spacing:3px;color:var(--text)}
-.support-tagline{font-size:15px;color:var(--muted);margin-bottom:40px;line-height:1.6;max-width:440px;margin-left:auto;margin-right:auto}
+.support-tagline{font-size:15px;color:var(--muted);margin-bottom:40px;line-height:1.6;max-width:440px;margin-left:auto;margin-right:auto;margin-top:12px}
 .support-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
-.support-link{display:flex;align-items:center;gap:10px;padding:14px 28px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);text-decoration:none;font-family:var(--mono);font-size:13px;transition:all 0.2s;cursor:pointer}
+.support-link{display:flex;align-items:center;gap:10px;padding:14px 28px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);text-decoration:none;font-family:var(--mono);font-size:13px;transition:all 0.2s}
 .support-link:hover{transform:translateY(-2px)}
-.support-link.youtube{border-color:#ff0000;color:#ff4444}
-.support-link.youtube:hover{background:rgba(255,0,0,0.08)}
-.support-link.tiktok{border-color:#69c9d0;color:#69c9d0}
-.support-link.tiktok:hover{background:rgba(105,201,208,0.08)}
-.support-link.paypal{border-color:#003087;color:#0079c1}
-.support-link.paypal:hover{background:rgba(0,121,193,0.08)}
-.support-link.ko-fi{border-color:#ff5e5b;color:#ff5e5b}
-.support-link.ko-fi:hover{background:rgba(255,94,91,0.08)}
+.support-link.youtube{border-color:rgba(255,0,0,0.3);color:#ff4444}
+.support-link.youtube:hover{background:rgba(255,0,0,0.08);border-color:#ff0000}
+.support-link.tiktok{border-color:rgba(105,201,208,0.3);color:#69c9d0}
+.support-link.tiktok:hover{background:rgba(105,201,208,0.08);border-color:#69c9d0}
 .support-link svg{width:20px;height:20px;flex-shrink:0}
-.support-edit-note{font-size:11px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-family:var(--mono);margin-top:8px;text-align:left;line-height:1.6}
-.support-edit-note strong{color:var(--accent)}
 
 /* FOOTER */
-footer{border-top:1px solid var(--border);padding:24px 32px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+footer{border-top:1px solid var(--border);padding:24px 32px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;flex-wrap:wrap;gap:12px}
 footer p{font-size:12px;color:var(--muted);font-family:var(--mono)}
-
-/* ANIMATIONS */
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 .fade-in{animation:fadeIn 0.5s ease forwards}
-.pulsing{animation:pulse 1s ease-in-out infinite}
-
-/* SCROLLBAR */
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-logo">
     <div class="nav-logo-img" id="nav-logo-img">
@@ -202,6 +231,7 @@ footer p{font-size:12px;color:var(--muted);font-family:var(--mono)}
       <span class="logo-fallback">SL</span>
     </div>
     <span class="nav-title">SORTLAB</span>
+    <span class="nav-badge">12 ALGORITHMS</span>
   </div>
   <div class="nav-links">
     <a href="#setup">Configure</a>
@@ -210,43 +240,56 @@ footer p{font-size:12px;color:var(--muted);font-family:var(--mono)}
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero fade-in">
   <div class="hero-eyebrow">Algorithm Visualizer</div>
   <h1>SORT<br><em>EVERY</em><br>THING</h1>
-  <p>Watch sorting algorithms battle through your data in real time. Configure your numbers, pick your algorithm, and see the magic happen.</p>
+  <p class="hero-sub">Watch 12 sorting algorithms battle through your data in real time. Up to 1000 elements. Step through or let it rip.</p>
   <button class="hero-cta" onclick="document.getElementById('setup').scrollIntoView({behavior:'smooth'})">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     Start Sorting
   </button>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-val">12</div><div class="hero-stat-lbl">Algorithms</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">1K</div><div class="hero-stat-lbl">Max Elements</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">∞</div><div class="hero-stat-lbl">Bogo Luck</div></div>
+  </div>
 </section>
 
-<!-- SETUP -->
 <section id="setup">
   <div class="section-label">Step 1 — Configure your data</div>
-
   <div class="steps">
-    <!-- AMOUNT -->
     <div class="step-card" data-step="01">
       <div class="step-title">// How many numbers?</div>
-      <div class="step-desc">Choose how many elements to sort. More elements = more chaos.</div>
+      <div class="step-desc">Choose how many elements to sort. More = more chaos. Max 1000.</div>
       <div class="amount-grid">
         <button class="amount-btn" onclick="setAmount(5,this)">5</button>
         <button class="amount-btn active" onclick="setAmount(10,this)">10</button>
-        <button class="amount-btn" onclick="setAmount(20,this)">20</button>
+        <button class="amount-btn" onclick="setAmount(25,this)">25</button>
         <button class="amount-btn" onclick="setAmount(50,this)">50</button>
         <button class="amount-btn" onclick="setAmount(100,this)">100</button>
+        <button class="amount-btn" onclick="setAmount(250,this)">250</button>
+        <button class="amount-btn" onclick="setAmount(500,this)">500</button>
+        <button class="amount-btn" onclick="setAmount(1000,this)">1000</button>
       </div>
       <div class="custom-amount">
-        <input type="number" id="custom-amount-input" placeholder="Custom (max 200)" min="2" max="200" oninput="setCustomAmount(this.value)">
+        <input type="number" id="custom-amount-input" placeholder="Custom (2–1000)" min="2" max="1000" oninput="setCustomAmount(this.value)">
+      </div>
+      <div style="margin-top:16px">
+        <div class="step-title" style="margin-bottom:8px">// Initial order</div>
+        <div class="order-grid">
+          <button class="order-btn active" id="order-random" onclick="setOrder('random',this)">Random</button>
+          <button class="order-btn" id="order-nearly" onclick="setOrder('nearly',this)">Nearly sorted</button>
+          <button class="order-btn" id="order-reversed" onclick="setOrder('reversed',this)">Reversed</button>
+          <button class="order-btn" id="order-sorted" onclick="setOrder('sorted',this)">Already sorted</button>
+          <button class="order-btn" id="order-dupes" onclick="setOrder('dupes',this)">Many duplicates</button>
+          <button class="order-btn" id="order-pipe" onclick="setOrder('pipe',this)">Pipe organ</button>
+        </div>
       </div>
     </div>
-
-    <!-- NUMBER RANGE / CUSTOM -->
     <div class="step-card" data-step="02">
       <div class="step-title">// What numbers?</div>
       <div class="step-desc">Set a random range or type your own specific numbers.</div>
-      <div class="mode-row" style="margin-bottom:16px">
+      <div class="mode-row">
         <button class="mode-btn active" id="mode-random" onclick="setMode('random')">Random range</button>
         <button class="mode-btn" id="mode-custom" onclick="setMode('custom')">Custom list</button>
       </div>
@@ -258,45 +301,81 @@ footer p{font-size:12px;color:var(--muted);font-family:var(--mono)}
         </div>
         <div class="range-row">
           <label>Max</label>
-          <input type="range" id="range-max" min="1" max="1000" value="100" oninput="updateRange()">
+          <input type="range" id="range-max" min="2" max="10000" value="100" oninput="updateRange()">
           <span id="range-max-val">100</span>
         </div>
+        <div class="hint" style="margin-top:8px">Range affects bar heights and label visibility.</div>
       </div>
       <div id="custom-config" style="display:none">
         <div class="custom-input-wrap">
-          <textarea id="custom-numbers" placeholder="1 5 3 9 2 7 4 8 6 10&#10;or comma separated: 1,5,3,9,2"></textarea>
-          <div class="hint">Separate with spaces or commas. Amount setting will be ignored.</div>
+          <textarea id="custom-numbers" placeholder="1 5 3 9 2 7 4 8 6 10&#10;or: 1,5,3,9,2,7,4,8"></textarea>
+          <div class="hint">Separate by spaces or commas. Amount setting ignored.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ALGORITHM PICKER -->
   <div class="section-label">Step 2 — Pick your algorithm</div>
-  <div class="algo-grid" style="margin-bottom:40px">
+  <div class="algo-grid">
     <div class="algo-btn active" data-algo="bubble" onclick="selectAlgo('bubble',this)">
       <div class="algo-name">Bubble Sort</div>
-      <div class="algo-complexity">Best: <em>O(n)</em> · Worst: <em>O(n²)</em></div>
+      <div class="algo-complexity">Worst: <em>O(n²)</em></div>
+      <div class="algo-tag slow">beginner</div>
     </div>
     <div class="algo-btn" data-algo="selection" onclick="selectAlgo('selection',this)">
       <div class="algo-name">Selection Sort</div>
-      <div class="algo-complexity">Best: <em>O(n²)</em> · Worst: <em>O(n²)</em></div>
+      <div class="algo-complexity">Worst: <em>O(n²)</em></div>
+      <div class="algo-tag slow">classic</div>
+    </div>
+    <div class="algo-btn" data-algo="insertion" onclick="selectAlgo('insertion',this)">
+      <div class="algo-name">Insertion Sort</div>
+      <div class="algo-complexity">Worst: <em>O(n²)</em></div>
+      <div class="algo-tag medium">adaptive</div>
     </div>
     <div class="algo-btn" data-algo="merge" onclick="selectAlgo('merge',this)">
       <div class="algo-name">Merge Sort</div>
-      <div class="algo-complexity">Best: <em>O(n log n)</em> · Worst: <em>O(n log n)</em></div>
-    </div>
-    <div class="algo-btn" data-algo="heap" onclick="selectAlgo('heap',this)">
-      <div class="algo-name">Heap Sort</div>
-      <div class="algo-complexity">Best: <em>O(n log n)</em> · Worst: <em>O(n log n)</em></div>
-    </div>
-    <div class="algo-btn" data-algo="bogo" onclick="selectAlgo('bogo',this)">
-      <div class="algo-name">Bogo Sort</div>
-      <div class="algo-complexity">Best: <em>O(n)</em> · Worst: <em>O(∞)</em></div>
+      <div class="algo-complexity">Worst: <em>O(n log n)</em></div>
+      <div class="algo-tag fast">stable</div>
     </div>
     <div class="algo-btn" data-algo="quick" onclick="selectAlgo('quick',this)">
       <div class="algo-name">Quick Sort</div>
-      <div class="algo-complexity">Best: <em>O(n log n)</em> · Worst: <em>O(n²)</em></div>
+      <div class="algo-complexity">Avg: <em>O(n log n)</em></div>
+      <div class="algo-tag fast">in-place</div>
+    </div>
+    <div class="algo-btn" data-algo="heap" onclick="selectAlgo('heap',this)">
+      <div class="algo-name">Heap Sort</div>
+      <div class="algo-complexity">Worst: <em>O(n log n)</em></div>
+      <div class="algo-tag fast">in-place</div>
+    </div>
+    <div class="algo-btn" data-algo="shell" onclick="selectAlgo('shell',this)">
+      <div class="algo-name">Shell Sort</div>
+      <div class="algo-complexity">Avg: <em>O(n log² n)</em></div>
+      <div class="algo-tag medium">gap-based</div>
+    </div>
+    <div class="algo-btn" data-algo="counting" onclick="selectAlgo('counting',this)">
+      <div class="algo-name">Counting Sort</div>
+      <div class="algo-complexity">Worst: <em>O(n+k)</em></div>
+      <div class="algo-tag fast">non-comp</div>
+    </div>
+    <div class="algo-btn" data-algo="radix" onclick="selectAlgo('radix',this)">
+      <div class="algo-name">Radix Sort</div>
+      <div class="algo-complexity">Worst: <em>O(nk)</em></div>
+      <div class="algo-tag fast">digit-based</div>
+    </div>
+    <div class="algo-btn" data-algo="cocktail" onclick="selectAlgo('cocktail',this)">
+      <div class="algo-name">Cocktail Sort</div>
+      <div class="algo-complexity">Worst: <em>O(n²)</em></div>
+      <div class="algo-tag medium">bidirect</div>
+    </div>
+    <div class="algo-btn" data-algo="gnome" onclick="selectAlgo('gnome',this)">
+      <div class="algo-name">Gnome Sort</div>
+      <div class="algo-complexity">Worst: <em>O(n²)</em></div>
+      <div class="algo-tag fun">quirky</div>
+    </div>
+    <div class="algo-btn danger-algo" data-algo="bogo" onclick="selectAlgo('bogo',this)">
+      <div class="algo-name">Bogo Sort ☠️</div>
+      <div class="algo-complexity">Worst: <em>O(∞)</em></div>
+      <div class="algo-tag fun">chaotic</div>
     </div>
   </div>
 
@@ -305,22 +384,31 @@ footer p{font-size:12px;color:var(--muted);font-family:var(--mono)}
   </div>
 </section>
 
-<!-- VISUALIZER -->
 <section id="visualizer">
   <div class="viz-header">
     <div>
-      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.2em;margin-bottom:6px">RUNNING</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.2em;margin-bottom:4px">RUNNING ALGORITHM</div>
       <div class="viz-algo-name" id="viz-algo-name">BUBBLE SORT</div>
+      <div class="viz-algo-tag" id="viz-algo-tag"></div>
     </div>
     <div class="viz-stats">
       <div class="stat-pill"><div class="label">COMPARISONS</div><div class="value" id="stat-comps">0</div></div>
       <div class="stat-pill"><div class="label">SWAPS</div><div class="value" id="stat-swaps">0</div></div>
       <div class="stat-pill"><div class="label">ELEMENTS</div><div class="value" id="stat-elems">0</div></div>
+      <div class="stat-pill"><div class="label">PROGRESS</div><div class="value" id="stat-pct">0%</div></div>
     </div>
   </div>
 
   <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
   <div class="status-line" id="status-line">Ready.</div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot default"></div>Unsorted</div>
+    <div class="legend-item"><div class="legend-dot comparing"></div>Comparing</div>
+    <div class="legend-item"><div class="legend-dot sorted"></div>Sorted</div>
+    <div class="legend-item"><div class="legend-dot pivot"></div>Pivot</div>
+    <div class="legend-item"><div class="legend-dot current"></div>Current</div>
+  </div>
 
   <div class="chart-container">
     <div class="chart-bars" id="chart-bars"></div>
@@ -330,384 +418,411 @@ footer p{font-size:12px;color:var(--muted);font-family:var(--mono)}
     <button class="ctrl-btn primary" id="btn-play" onclick="playPause()">▶ Play</button>
     <button class="ctrl-btn" id="btn-step-viz" onclick="stepOnce()">Step</button>
     <button class="ctrl-btn danger" onclick="resetViz()">↺ Reset</button>
+    <button class="ctrl-btn" onclick="reshuffleAndReset()">🔀 New data</button>
     <button class="ctrl-btn" onclick="document.getElementById('setup').scrollIntoView({behavior:'smooth'})">← Back</button>
     <div class="speed-control">
       <label>Delay</label>
-      <input type="range" id="viz-speed" min="0" max="500" value="80" step="5">
-      <span id="viz-speed-label">80ms</span>
+      <input type="range" id="viz-speed" min="0" max="500" value="60" step="5" oninput="onSpeedChange()">
+      <span id="viz-speed-label">60ms</span>
     </div>
   </div>
 
   <div class="info-grid">
     <div class="info-card">
       <div class="info-card-title">// Complexity</div>
-      <table class="complexity-table" id="complexity-table">
+      <table class="complexity-table">
         <tr><td>Best case</td><td id="c-best">—</td></tr>
         <tr><td>Average</td><td id="c-avg">—</td></tr>
         <tr><td>Worst case</td><td id="c-worst">—</td></tr>
         <tr><td>Space</td><td id="c-space">—</td></tr>
         <tr><td>Stable</td><td id="c-stable">—</td></tr>
+        <tr><td>In-place</td><td id="c-inplace">—</td></tr>
       </table>
     </div>
     <div class="info-card">
-      <div class="info-card-title">// About this algorithm</div>
+      <div class="info-card-title">// About</div>
       <p class="algo-desc" id="algo-desc">Select an algorithm to see its description.</p>
     </div>
+    <div class="info-card">
+      <div class="info-card-title">// Use cases</div>
+      <ul class="use-cases" id="use-cases"></ul>
+    </div>
+  </div>
+
+  <div class="log-panel">
+    <div class="log-header">
+      <span>Operation log</span>
+      <span id="log-count" style="color:var(--accent);font-size:10px">0 ops</span>
+    </div>
+    <div class="log-body" id="log-body"></div>
   </div>
 </section>
 
-<!-- SUPPORT -->
 <section id="support">
   <div class="support-inner">
     <div class="support-logo-row">
       <div class="support-logo" id="support-logo">
         <img src="" id="support-logo-src" alt="Channel Logo">
-        <span class="logo-fallback-big">SL</span>
+        <span class="logo-fallback-big">LS</span>
       </div>
-      <div class="support-channel-name" id="channel-name">YOUR CHANNEL</div>
+      <div class="support-channel-name">LISTSORT</div>
     </div>
-    <p class="support-tagline" id="channel-tagline">If you enjoy SortLab, consider supporting the channel — it helps us make more free tools and videos for you.</p>
+    <p class="support-tagline">If SortLab helped you understand algorithms, consider supporting the channel — it helps us make more free tools and videos!</p>
     <div class="support-links">
-      <a class="support-link youtube" id="link-youtube" href="#" target="_blank">
+      <a class="support-link youtube" href="https://www.youtube.com/@RLplayet" target="_blank">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
         YouTube
       </a>
-      <a class="support-link tiktok" id="link-tiktok" href="#" target="_blank">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 3a4.6 4.6 0 0 1-4.5-4h-3.3v11.8L11.7 17a2.8 2.8 0 1 1-2.6-3.8c.3 0 .5 0 .8.1V10a6.2 6.2 0 0 0-.8 0A6.1 6.1 0 0 0 3 16.1a6.1 6.1 0 0 0 6.1 6.1 6.1 6.1 0 0 0 6.1-6.1V9.4a8 8 0 0 0 4.7 1.5V7.6a4.6 4.6 0 0 1-0.3 0z"/></svg>
+      <a class="support-link tiktok" href="https://www.tiktok.com/@listsort" target="_blank">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 3a4.6 4.6 0 0 1-4.5-4h-3.3v11.8L11.7 17a2.8 2.8 0 1 1-2.6-3.8c.3 0 .5 0 .8.1V10a6.2 6.2 0 0 0-.8 0A6.1 6.1 0 0 0 3 16.1a6.1 6.1 0 0 0 6.1 6.1 6.1 6.1 0 0 0 6.1-6.1V9.4a8 8 0 0 0 4.7 1.5V7.6a4.6 4.6 0 0 1-.3 0z"/></svg>
         TikTok
       </a>
-      <a class="support-link paypal" id="link-paypal" href="#" target="_blank">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.1 21.5l.4-2.3.1-.4H6l1.4-9H12c2.7 0 4.6 1 5.2 3.1.7 2.6-.5 5.3-3.5 6.1-.5.2-1.1.2-1.7.2H10l-.4 2.3H7.1zM9.6 5.5H5.2L3 19h2.7l.4-2.5h2.1c1.2 0 2.4-.3 3.3-.9 2.4-1.5 3-4.4 1.8-6.5-.7-1.2-2-2.1-3.7-2.1-.1-.5-.3-1-.7-1.5z"/></svg>
-        PayPal
-      </a>
-      <a class="support-link ko-fi" id="link-kofi" href="#" target="_blank">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.9 7.6C23.5 5 21.7 3.4 19 3H2.7C1.5 3 .7 3.9.7 5.1v.2l1.7 12.2C2.7 19 3.8 20 5 20h9.7c1 0 1.8-.7 2-1.7l.3-2h.8c4.1 0 6.7-2.7 6.7-6.2 0-.8-.2-1.7-.6-2.5zm-7 5.3h-.7l.5-3.4h.7c1.2 0 1.9.5 1.9 1.6 0 1.2-.9 1.8-2.4 1.8z"/></svg>
-        Ko-fi
-      </a>
-    </div>
-    <div class="support-edit-note">
-      <strong>// To customize this section:</strong><br>
-      Change <strong>channel name</strong>: edit <code>id="channel-name"</code> text<br>
-      Change <strong>logo</strong>: set <code>id="nav-logo-src"</code> and <code>id="support-logo-src"</code> src to your image path<br>
-      Change <strong>links</strong>: update <code>href="#"</code> on each support-link anchor to your real URLs<br>
-      Change <strong>tagline</strong>: edit <code>id="channel-tagline"</code> text
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
-  <p>© 2025 SortLab — Built with ❤️</p>
-  <p style="color:var(--accent);font-size:11px">SORT EVERYTHING</p>
+  <p>© 2025 SortLab — <a href="https://www.youtube.com/@RLplayet" style="color:var(--accent);text-decoration:none">@RLplayet</a></p>
+  <p style="color:var(--accent)">SORT EVERYTHING</p>
 </footer>
 
 <script>
-// ─── STATE ─────────────────────────────────────────────────
-let state = {
-  amount: 10, mode: 'random', minVal: 1, maxVal: 100,
-  algo: 'bubble', numbers: [], steps: [], stepIdx: 0,
-  comparisons: 0, swaps: 0, playing: false, timer: null, done: false
+// ─── STATE ────────────────────────────────────────────────────────────
+const S = {
+  amount:10, mode:'random', order:'random', minVal:1, maxVal:100,
+  algo:'bubble', numbers:[], steps:[], stepIdx:0,
+  comparisons:0, swaps:0, playing:false, timer:null, done:false, logCount:0
+};
+let sortedIndices = new Set();
+
+// ─── ALGO INFO ─────────────────────────────────────────────────────────
+const ALGO_INFO = {
+  bubble:    {name:'BUBBLE SORT',    best:'O(n)',        avg:'O(n²)',       worst:'O(n²)',      space:'O(1)',      stable:'Yes', inplace:'Yes', tag:'Beginner friendly', desc:'Repeatedly steps through the list, compares adjacent elements, and swaps if out of order. Simple but slow — each pass "bubbles" the largest unsorted element to its final position.', uses:['Teaching sorting concepts','Very small datasets','Nearly sorted data (best case O(n))','When simplicity > speed']},
+  selection: {name:'SELECTION SORT', best:'O(n²)',       avg:'O(n²)',       worst:'O(n²)',      space:'O(1)',      stable:'No',  inplace:'Yes', tag:'Classic comparison sort', desc:'Finds the minimum element and places it at the start, then repeats for the remaining list. Makes the minimum number of swaps (O(n)), but always does O(n²) comparisons regardless of input.', uses:['Minimizing swaps is critical','Embedded systems with small memory','Teaching selection algorithms','Small fixed-size arrays']},
+  insertion: {name:'INSERTION SORT', best:'O(n)',        avg:'O(n²)',       worst:'O(n²)',      space:'O(1)',      stable:'Yes', inplace:'Yes', tag:'Adaptive & online', desc:'Builds a sorted array one element at a time by inserting each into its correct position. Excellent for nearly-sorted data and small inputs. Used as the base case in hybrid algorithms like Timsort.', uses:['Nearly sorted input','Online sorting (data arrives in stream)','Small arrays (< 20 elements)','Hybrid algorithm base case (Timsort)']},
+  merge:     {name:'MERGE SORT',     best:'O(n log n)',  avg:'O(n log n)',  worst:'O(n log n)', space:'O(n)',      stable:'Yes', inplace:'No',  tag:'Divide and conquer', desc:'Divides the array in half, recursively sorts each half, then merges them together. Guaranteed O(n log n) in all cases. Excellent for linked lists and external sorting. Uses extra memory.', uses:['Large datasets requiring guaranteed speed','Sorting linked lists','External sorting (data on disk)','Stable sort required']},
+  quick:     {name:'QUICK SORT',     best:'O(n log n)',  avg:'O(n log n)',  worst:'O(n²)',      space:'O(log n)', stable:'No',  inplace:'Yes', tag:'Fastest in practice', desc:'Picks a pivot, partitions elements around it (smaller left, larger right), then recursively sorts each partition. Fastest in practice with good pivots. Worst case hits with already-sorted input and bad pivot selection.', uses:['General purpose sorting','Large in-memory datasets','When average performance matters','Most standard library implementations']},
+  heap:      {name:'HEAP SORT',      best:'O(n log n)',  avg:'O(n log n)',  worst:'O(n log n)', space:'O(1)',      stable:'No',  inplace:'Yes', tag:'Guaranteed + in-place', desc:'Builds a max-heap from the data, then repeatedly extracts the maximum. Combines the time efficiency of merge sort with the space efficiency of selection sort. Never degrades to O(n²).', uses:['When O(n log n) worst case is required','Memory-constrained environments','Priority queue operations','Real-time systems']},
+  shell:     {name:'SHELL SORT',     best:'O(n log n)',  avg:'O(n log² n)', worst:'O(n²)',      space:'O(1)',      stable:'No',  inplace:'Yes', tag:'Gap-based insertion', desc:'An extension of insertion sort that allows swapping elements far apart. Starts with a large gap (half the array), reduces it each pass. Much faster than insertion sort on large inputs — a great middle-ground algorithm.', uses:['Medium-sized datasets','When merge/quick sort is overkill','Embedded systems','When gap tuning is possible']},
+  counting:  {name:'COUNTING SORT',  best:'O(n+k)',      avg:'O(n+k)',      worst:'O(n+k)',     space:'O(k)',      stable:'Yes', inplace:'No',  tag:'Non-comparison sort', desc:'Counts occurrences of each value, then reconstructs the sorted array from counts. Blazing fast when the range k is small relative to n. Doesn\'t compare elements at all — completely bypasses the O(n log n) lower bound.', uses:['Integer data with small range','Counting occurrences naturally','Radix sort subroutine','Age/score sorting (bounded range)']},
+  radix:     {name:'RADIX SORT',     best:'O(nk)',       avg:'O(nk)',       worst:'O(nk)',      space:'O(n+k)',    stable:'Yes', inplace:'No',  tag:'Digit-by-digit sort', desc:'Sorts integers digit by digit from least significant to most significant, using counting sort as a stable subroutine. Beats comparison sorts for integers with fixed digit count. k = number of digits.', uses:['Large integer datasets','Fixed-length strings','IP address sorting','When digit count is bounded']},
+  cocktail:  {name:'COCKTAIL SORT',  best:'O(n)',        avg:'O(n²)',       worst:'O(n²)',      space:'O(1)',      stable:'Yes', inplace:'Yes', tag:'Bidirectional bubble', desc:'A variation of bubble sort that traverses the list in both directions alternately — left-to-right, then right-to-left. Eliminates "turtles" (small elements near the end) faster than plain bubble sort. Also called shaker sort.', uses:['Teaching bidirectional algorithms','When turtles problem is common','Small datasets','Demonstrating bubble sort variants']},
+  gnome:     {name:'GNOME SORT',     best:'O(n)',        avg:'O(n²)',       worst:'O(n²)',      space:'O(1)',      stable:'Yes', inplace:'Yes', tag:'Quirky & simple', desc:'Named after a gnome sorting flower pots. Moves forward if elements are in order, swaps and steps back if not. Conceptually the simplest sorting algorithm imaginable — a garden gnome sorting things one swap at a time.', uses:['Teaching simplest possible sort','Very small datasets','Nearly sorted input','When code simplicity is paramount']},
+  bogo:      {name:'BOGO SORT ☠️',   best:'O(n)',        avg:'O((n+1)!)',   worst:'O(∞)',       space:'O(1)',      stable:'No',  inplace:'Yes', tag:'Chaotic & cursed', desc:'Randomly shuffles the array and checks if it\'s sorted. Repeat until lucky. Expected time is O((n+1)!) — for 10 elements that\'s ~39 million average shuffles. Capped at 50,000 attempts here. Use ≤7 elements or prepare to wait forever.', uses:['Teaching worst-case complexity','Comedy algorithm demos','⚠️ Nowhere in production ever','Proving you understand O(∞)']},
 };
 
-// ─── SETUP UI ──────────────────────────────────────────────
-function setAmount(n, btn) {
-  state.amount = n;
-  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  document.getElementById('custom-amount-input').value = '';
-}
+// ─── SETUP UI ──────────────────────────────────────────────────────────
+function setAmount(n,btn){S.amount=n;document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');document.getElementById('custom-amount-input').value='';}
+function setCustomAmount(v){const n=parseInt(v);if(n>=2&&n<=1000){S.amount=n;document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));}}
+function setMode(m){S.mode=m;document.getElementById('mode-random').classList.toggle('active',m==='random');document.getElementById('mode-custom').classList.toggle('active',m==='custom');document.getElementById('random-config').style.display=m==='random'?'block':'none';document.getElementById('custom-config').style.display=m==='custom'?'block':'none';}
+function setOrder(o,btn){S.order=o;document.querySelectorAll('.order-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function updateRange(){const mn=parseInt(document.getElementById('range-min').value),mx=parseInt(document.getElementById('range-max').value);document.getElementById('range-min-val').textContent=mn;document.getElementById('range-max-val').textContent=mx;S.minVal=mn;S.maxVal=mx;}
+function selectAlgo(a,btn){S.algo=a;document.querySelectorAll('.algo-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 
-function setCustomAmount(v) {
-  const n = parseInt(v);
-  if (n >= 2 && n <= 200) {
-    state.amount = n;
-    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+// ─── GENERATE DATA ─────────────────────────────────────────────────────
+function generateNumbers(){
+  if(S.mode==='custom'){
+    const raw=document.getElementById('custom-numbers').value.trim();
+    if(!raw)return null;
+    const nums=raw.split(/[\s,]+/).map(Number).filter(n=>!isNaN(n));
+    return nums.length>=2?nums:null;
   }
-}
-
-function setMode(m) {
-  state.mode = m;
-  document.getElementById('mode-random').classList.toggle('active', m === 'random');
-  document.getElementById('mode-custom').classList.toggle('active', m === 'custom');
-  document.getElementById('random-config').style.display = m === 'random' ? 'block' : 'none';
-  document.getElementById('custom-config').style.display = m === 'custom' ? 'block' : 'none';
-}
-
-function updateRange() {
-  const min = parseInt(document.getElementById('range-min').value);
-  const max = parseInt(document.getElementById('range-max').value);
-  document.getElementById('range-min-val').textContent = min;
-  document.getElementById('range-max-val').textContent = max;
-  state.minVal = min; state.maxVal = max;
-  if (min >= max) document.getElementById('range-max').value = min + 1;
-}
-
-function selectAlgo(algo, btn) {
-  state.algo = algo;
-  document.querySelectorAll('.algo-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-// ─── GENERATE NUMBERS ─────────────────────────────────────
-function generateNumbers() {
-  if (state.mode === 'custom') {
-    const raw = document.getElementById('custom-numbers').value.trim();
-    if (!raw) return null;
-    const nums = raw.split(/[\s,]+/).map(Number).filter(n => !isNaN(n));
-    if (nums.length < 2) return null;
-    return nums;
-  }
-  const min = state.minVal, max = Math.max(state.minVal + 1, state.maxVal);
-  const arr = [];
-  for (let i = 0; i < state.amount; i++) arr.push(Math.floor(Math.random() * (max - min + 1)) + min);
+  const min=S.minVal,max=Math.max(S.minVal+1,S.maxVal);
+  let arr=[];
+  for(let i=0;i<S.amount;i++) arr.push(Math.floor(Math.random()*(max-min+1))+min);
+  // apply order
+  arr.sort((a,b)=>a-b);
+  if(S.order==='random'){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
+  else if(S.order==='reversed') arr.reverse();
+  else if(S.order==='nearly'){for(let i=0;i<Math.max(1,Math.floor(arr.length*0.05));i++){const a=Math.floor(Math.random()*arr.length),b=Math.floor(Math.random()*arr.length);[arr[a],arr[b]]=[arr[b],arr[a]];}}
+  else if(S.order==='dupes'){const vals=[min,Math.floor((min+max)/2),max];arr=arr.map(()=>vals[Math.floor(Math.random()*vals.length)]);}
+  else if(S.order==='pipe'){const half=Math.floor(arr.length/2);arr=arr.map((_,i)=>i<half?i+1:arr.length-i);}
+  // sorted = leave as is
   return arr;
 }
 
-// ─── ALGO INFO ────────────────────────────────────────────
-const ALGO_INFO = {
-  bubble:    { name:'BUBBLE SORT',    best:'O(n)',       avg:'O(n²)',      worst:'O(n²)',      space:'O(1)',   stable:'Yes', desc:'Bubble sort repeatedly steps through the list, compares adjacent elements, and swaps them if they\'re in the wrong order. Simple but inefficient for large datasets — like slowly bubbling the biggest values to the top.' },
-  selection: { name:'SELECTION SORT', best:'O(n²)',      avg:'O(n²)',      worst:'O(n²)',      space:'O(1)',   stable:'No',  desc:'Selection sort finds the minimum element and places it at the beginning, then repeats for the remaining list. Always O(n²) comparisons regardless of input — predictable but slow.' },
-  merge:     { name:'MERGE SORT',     best:'O(n log n)', avg:'O(n log n)', worst:'O(n log n)', space:'O(n)',   stable:'Yes', desc:'Merge sort divides the array in half, recursively sorts each half, then merges them. Guaranteed O(n log n) performance in all cases — excellent for large datasets. Requires extra memory.' },
-  heap:      { name:'HEAP SORT',      best:'O(n log n)', avg:'O(n log n)', worst:'O(n log n)', space:'O(1)',   stable:'No',  desc:'Heap sort builds a max-heap from the data, then repeatedly extracts the maximum. Combines the time efficiency of merge sort with the space efficiency of selection sort. In-place and reliable.' },
-  bogo:      { name:'BOGO SORT',      best:'O(n)',       avg:'O((n+1)!)',  worst:'O(∞)',       space:'O(1)',   stable:'No',  desc:'Bogo sort randomly shuffles the array and checks if it\'s sorted. Repeat until lucky. Absolutely terrible in practice — expected time is O((n+1)!) — but delightfully chaotic to watch. Use small arrays!' },
-  quick:     { name:'QUICK SORT',     best:'O(n log n)', avg:'O(n log n)', worst:'O(n²)',      space:'O(log n)',stable:'No', desc:'Quick sort picks a pivot, partitions elements around it, and recursively sorts each partition. Very fast in practice with good pivot selection. The O(n²) worst case only hits with bad pivots (already sorted data).' },
-};
-
-// ─── STEP GENERATORS ─────────────────────────────────────
-function genBubble(arr) {
-  const steps = [], a = [...arr];
-  for (let i = 0; i < a.length; i++) {
-    for (let j = 0; j < a.length - i - 1; j++) {
-      steps.push({ type:'compare', idx:[j, j+1], arr:[...a] });
-      if (a[j] > a[j+1]) { [a[j],a[j+1]] = [a[j+1],a[j]]; steps.push({ type:'swap', idx:[j,j+1], arr:[...a] }); }
-    }
-    steps.push({ type:'sorted-mark', idx:[a.length-1-i], arr:[...a] });
-  }
-  steps.push({ type:'done', arr:[...a] });
-  return steps;
+// ─── STEP GENERATORS ───────────────────────────────────────────────────
+function genBubble(arr){
+  const steps=[],a=[...arr];
+  for(let i=0;i<a.length;i++){let sw=false;
+    for(let j=0;j<a.length-i-1;j++){steps.push({t:'c',i:[j,j+1],a:[...a]});
+      if(a[j]>a[j+1]){[a[j],a[j+1]]=[a[j+1],a[j]];steps.push({t:'s',i:[j,j+1],a:[...a]});sw=true;}}
+    steps.push({t:'m',i:[a.length-1-i],a:[...a]});if(!sw)break;}
+  steps.push({t:'done',a:[...a]});return steps;
 }
-
-function genSelection(arr) {
-  const steps = [], a = [...arr];
-  for (let i = 0; i < a.length; i++) {
-    let min = i;
-    for (let j = i+1; j < a.length; j++) {
-      steps.push({ type:'compare', idx:[min,j], arr:[...a] });
-      if (a[j] < a[min]) min = j;
-    }
-    if (min !== i) { [a[i],a[min]] = [a[min],a[i]]; steps.push({ type:'swap', idx:[i,min], arr:[...a] }); }
-    steps.push({ type:'sorted-mark', idx:[i], arr:[...a] });
-  }
-  steps.push({ type:'done', arr:[...a] });
-  return steps;
+function genSelection(arr){
+  const steps=[],a=[...arr];
+  for(let i=0;i<a.length;i++){let mn=i;
+    for(let j=i+1;j<a.length;j++){steps.push({t:'c',i:[mn,j],a:[...a]});if(a[j]<a[mn])mn=j;}
+    if(mn!==i){[a[i],a[mn]]=[a[mn],a[i]];steps.push({t:'s',i:[i,mn],a:[...a]});}
+    steps.push({t:'m',i:[i],a:[...a]});}
+  steps.push({t:'done',a:[...a]});return steps;
 }
-
-function genMerge(arr) {
-  const steps = [], a = [...arr];
-  function merge(l, m, r) {
-    const left = a.slice(l, m+1), right = a.slice(m+1, r+1);
-    let i=0,j=0,k=l;
-    while(i<left.length&&j<right.length){
-      steps.push({type:'compare',idx:[l+i,m+1+j],arr:[...a]});
-      if(left[i]<=right[j]){a[k++]=left[i++];}else{a[k++]=right[j++];}
-      steps.push({type:'swap',idx:[k-1],arr:[...a]});
-    }
-    while(i<left.length){a[k++]=left[i++];steps.push({type:'swap',idx:[k-1],arr:[...a]});}
-    while(j<right.length){a[k++]=right[j++];steps.push({type:'swap',idx:[k-1],arr:[...a]});}
-  }
+function genInsertion(arr){
+  const steps=[],a=[...arr];
+  steps.push({t:'m',i:[0],a:[...a]});
+  for(let i=1;i<a.length;i++){let j=i;
+    while(j>0){steps.push({t:'c',i:[j-1,j],a:[...a]});
+      if(a[j]<a[j-1]){[a[j],a[j-1]]=[a[j-1],a[j]];steps.push({t:'s',i:[j,j-1],a:[...a]});j--;}else break;}
+    steps.push({t:'m',i:[j],a:[...a]});}
+  steps.push({t:'done',a:[...a]});return steps;
+}
+function genMerge(arr){
+  const steps=[],a=[...arr];
+  function merge(l,m,r){const left=a.slice(l,m+1),right=a.slice(m+1,r+1);let i=0,j=0,k=l;
+    while(i<left.length&&j<right.length){steps.push({t:'c',i:[l+i,m+1+j],a:[...a]});
+      if(left[i]<=right[j])a[k++]=left[i++];else a[k++]=right[j++];steps.push({t:'s',i:[k-1],a:[...a]});}
+    while(i<left.length){a[k++]=left[i++];steps.push({t:'s',i:[k-1],a:[...a]});}
+    while(j<right.length){a[k++]=right[j++];steps.push({t:'s',i:[k-1],a:[...a]});}}
   function sort(l,r){if(l>=r)return;const m=Math.floor((l+r)/2);sort(l,m);sort(m+1,r);merge(l,m,r);}
-  sort(0,a.length-1);
-  steps.push({type:'done',arr:[...a]});
-  return steps;
+  sort(0,a.length-1);steps.push({t:'done',a:[...a]});return steps;
 }
-
-function genHeap(arr) {
-  const steps = [], a = [...arr], n = a.length;
-  function heapify(n, i) {
-    let max=i,l=2*i+1,r=2*i+2;
-    if(l<n){steps.push({type:'compare',idx:[max,l],arr:[...a]});if(a[l]>a[max])max=l;}
-    if(r<n){steps.push({type:'compare',idx:[max,r],arr:[...a]});if(a[r]>a[max])max=r;}
-    if(max!==i){[a[i],a[max]]=[a[max],a[i]];steps.push({type:'swap',idx:[i,max],arr:[...a]});heapify(n,max);}
-  }
+function genQuick(arr){
+  const steps=[],a=[...arr];
+  function partition(l,r){const pv=a[r];let i=l-1;steps.push({t:'p',i:[r],a:[...a]});
+    for(let j=l;j<r;j++){steps.push({t:'c',i:[j,r],a:[...a]});
+      if(a[j]<=pv){i++;if(i!==j){[a[i],a[j]]=[a[j],a[i]];steps.push({t:'s',i:[i,j],a:[...a]});}}}
+    [a[i+1],a[r]]=[a[r],a[i+1]];steps.push({t:'s',i:[i+1,r],a:[...a]});return i+1;}
+  function sort(l,r){if(l>=r)return;const p=partition(l,r);steps.push({t:'m',i:[p],a:[...a]});sort(l,p-1);sort(p+1,r);}
+  sort(0,a.length-1);steps.push({t:'done',a:[...a]});return steps;
+}
+function genHeap(arr){
+  const steps=[],a=[...arr],n=a.length;
+  function heapify(n,i){let mx=i,l=2*i+1,r=2*i+2;
+    if(l<n){steps.push({t:'c',i:[mx,l],a:[...a]});if(a[l]>a[mx])mx=l;}
+    if(r<n){steps.push({t:'c',i:[mx,r],a:[...a]});if(a[r]>a[mx])mx=r;}
+    if(mx!==i){[a[i],a[mx]]=[a[mx],a[i]];steps.push({t:'s',i:[i,mx],a:[...a]});heapify(n,mx);}}
   for(let i=Math.floor(n/2)-1;i>=0;i--)heapify(n,i);
-  for(let i=n-1;i>0;i--){[a[0],a[i]]=[a[i],a[0]];steps.push({type:'swap',idx:[0,i],arr:[...a]});steps.push({type:'sorted-mark',idx:[i],arr:[...a]});heapify(i,0);}
-  steps.push({type:'done',arr:[...a]});
-  return steps;
+  for(let i=n-1;i>0;i--){[a[0],a[i]]=[a[i],a[0]];steps.push({t:'s',i:[0,i],a:[...a]});steps.push({t:'m',i:[i],a:[...a]});heapify(i,0);}
+  steps.push({t:'done',a:[...a]});return steps;
+}
+function genShell(arr){
+  const steps=[],a=[...arr];let gap=Math.floor(a.length/2);
+  while(gap>0){
+    for(let i=gap;i<a.length;i++){let j=i;
+      while(j>=gap){steps.push({t:'c',i:[j-gap,j],a:[...a]});
+        if(a[j]<a[j-gap]){[a[j],a[j-gap]]=[a[j-gap],a[j]];steps.push({t:'s',i:[j,j-gap],a:[...a]});j-=gap;}else break;}}
+    gap=Math.floor(gap/2);}
+  steps.push({t:'done',a:[...a]});return steps;
+}
+function genCounting(arr){
+  const steps=[],a=[...arr];
+  const mn=Math.min(...a),mx=Math.max(...a);
+  const count=new Array(mx-mn+1).fill(0);
+  for(let i=0;i<a.length;i++){count[a[i]-mn]++;steps.push({t:'c',i:[i],a:[...a]});}
+  let idx=0;
+  for(let v=0;v<count.length;v++){while(count[v]-->0){a[idx]=v+mn;steps.push({t:'s',i:[idx],a:[...a]});idx++;}}
+  steps.push({t:'done',a:[...a]});return steps;
+}
+function genRadix(arr){
+  const steps=[],a=[...arr];
+  const mx=Math.max(...a);
+  for(let exp=1;Math.floor(mx/exp)>0;exp*=10){
+    const output=new Array(a.length).fill(0),count=new Array(10).fill(0);
+    for(let i=0;i<a.length;i++){count[Math.floor(a[i]/exp)%10]++;steps.push({t:'c',i:[i],a:[...a]});}
+    for(let i=1;i<10;i++)count[i]+=count[i-1];
+    for(let i=a.length-1;i>=0;i--){output[--count[Math.floor(a[i]/exp)%10]]=a[i];}
+    for(let i=0;i<a.length;i++){a[i]=output[i];steps.push({t:'s',i:[i],a:[...a]});}}
+  steps.push({t:'done',a:[...a]});return steps;
+}
+function genCocktail(arr){
+  const steps=[],a=[...arr];let l=0,r=a.length-1,sw=true;
+  while(sw){sw=false;
+    for(let i=l;i<r;i++){steps.push({t:'c',i:[i,i+1],a:[...a]});if(a[i]>a[i+1]){[a[i],a[i+1]]=[a[i+1],a[i]];steps.push({t:'s',i:[i,i+1],a:[...a]});sw=true;}}
+    steps.push({t:'m',i:[r],a:[...a]});r--;
+    for(let i=r;i>l;i--){steps.push({t:'c',i:[i-1,i],a:[...a]});if(a[i]<a[i-1]){[a[i],a[i-1]]=[a[i-1],a[i]];steps.push({t:'s',i:[i,i-1],a:[...a]});sw=true;}}
+    steps.push({t:'m',i:[l],a:[...a]});l++;}
+  steps.push({t:'done',a:[...a]});return steps;
+}
+function genGnome(arr){
+  const steps=[],a=[...arr];let i=0;
+  while(i<a.length){
+    if(i===0||a[i]>=a[i-1]){steps.push({t:'c',i:[i],a:[...a]});i++;}
+    else{steps.push({t:'c',i:[i-1,i],a:[...a]});[a[i],a[i-1]]=[a[i-1],a[i]];steps.push({t:'s',i:[i,i-1],a:[...a]});i--;}}
+  steps.push({t:'done',a:[...a]});return steps;
+}
+function genBogo(arr){
+  const steps=[],a=[...arr];
+  const sorted=[...arr].sort((x,y)=>x-y);
+  const isSorted=()=>a.every((v,i)=>v===sorted[i]);
+  let n=0,MAX=50000;
+  while(!isSorted()&&n++<MAX){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}steps.push({t:'s',i:[],a:[...a]});}
+  steps.push({t:'done',a:[...a]});return steps;
 }
 
-function genBogo(arr) {
-  const steps = [], a = [...arr];
-  const sorted = [...arr].sort((x,y)=>x-y);
-  const isSorted = () => a.every((v,i)=>v===sorted[i]);
-  let attempts = 0, MAX = 5000;
-  while(!isSorted() && attempts++ < MAX) {
-    for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
-    steps.push({type:'swap',idx:[],arr:[...a]});
-  }
-  steps.push({type:'done',arr:[...a]});
-  return steps;
-}
-
-function genQuick(arr) {
-  const steps = [], a = [...arr];
-  function partition(l,r){
-    const pivot=a[r]; let i=l-1;
-    steps.push({type:'pivot',idx:[r],arr:[...a]});
-    for(let j=l;j<r;j++){
-      steps.push({type:'compare',idx:[j,r],arr:[...a]});
-      if(a[j]<=pivot){i++;[a[i],a[j]]=[a[j],a[i]];if(i!==j)steps.push({type:'swap',idx:[i,j],arr:[...a]});}
-    }
-    [a[i+1],a[r]]=[a[r],a[i+1]];steps.push({type:'swap',idx:[i+1,r],arr:[...a]});
-    return i+1;
-  }
-  function sort(l,r){if(l>=r)return;const p=partition(l,r);steps.push({type:'sorted-mark',idx:[p],arr:[...a]});sort(l,p-1);sort(p+1,r);}
-  sort(0,a.length-1);
-  steps.push({type:'done',arr:[...a]});
-  return steps;
-}
-
-function generateSteps(arr, algo) {
+function generateSteps(arr,algo){
   switch(algo){
-    case 'bubble': return genBubble(arr);
+    case 'bubble':    return genBubble(arr);
     case 'selection': return genSelection(arr);
-    case 'merge': return genMerge(arr);
-    case 'heap': return genHeap(arr);
-    case 'bogo': return genBogo(arr);
-    case 'quick': return genQuick(arr);
+    case 'insertion': return genInsertion(arr);
+    case 'merge':     return genMerge(arr);
+    case 'quick':     return genQuick(arr);
+    case 'heap':      return genHeap(arr);
+    case 'shell':     return genShell(arr);
+    case 'counting':  return genCounting(arr);
+    case 'radix':     return genRadix(arr);
+    case 'cocktail':  return genCocktail(arr);
+    case 'gnome':     return genGnome(arr);
+    case 'bogo':      return genBogo(arr);
   }
 }
 
-// ─── RENDER ───────────────────────────────────────────────
-let sortedIndices = new Set();
-
-function renderBars(arr, highlight=[], sortedSet=new Set()) {
-  const container = document.getElementById('chart-bars');
-  const maxVal = Math.max(...arr);
-  const showLabels = arr.length <= 30;
-  if (container.children.length !== arr.length) {
-    container.innerHTML = '';
-    arr.forEach((_,i) => {
-      const wrap = document.createElement('div'); wrap.className='bar-wrap';
-      const num = document.createElement('div'); num.className='bar-num';
-      const bar = document.createElement('div'); bar.className='bar default';
-      wrap.append(num,bar); container.appendChild(wrap);
-    });
+// ─── RENDER ─────────────────────────────────────────────────────────────
+function renderBars(arr,hl=[],sm=new Set(),piv=[]){
+  const container=document.getElementById('chart-bars');
+  const maxVal=Math.max(...arr,1);
+  const showLabels=arr.length<=40;
+  if(container.children.length!==arr.length){
+    container.innerHTML='';
+    arr.forEach(()=>{
+      const wrap=document.createElement('div');wrap.className='bar-wrap';
+      const num=document.createElement('div');num.className='bar-num';
+      const bar=document.createElement('div');bar.className='bar default';
+      wrap.append(num,bar);container.appendChild(wrap);});
   }
-  arr.forEach((v,i) => {
-    const wrap = container.children[i];
-    const bar = wrap.querySelector('.bar');
-    const num = wrap.querySelector('.bar-num');
-    const h = Math.max(2, Math.round((v / maxVal) * 280));
-    bar.style.height = h + 'px';
-    if (showLabels) num.textContent = v; else num.textContent = '';
-    bar.className = 'bar';
-    if (sortedSet.has(i)) bar.classList.add('sorted');
-    else if (highlight.includes(i)) bar.classList.add('comparing');
+  arr.forEach((v,i)=>{
+    const wrap=container.children[i];
+    const bar=wrap.querySelector('.bar'),num=wrap.querySelector('.bar-num');
+    bar.style.height=Math.max(2,Math.round((v/maxVal)*275))+'px';
+    if(showLabels)num.textContent=v;else num.textContent='';
+    bar.className='bar';
+    if(sm.has(i))bar.classList.add('sorted');
+    else if(piv.includes(i))bar.classList.add('pivot');
+    else if(hl.includes(i))bar.classList.add('comparing');
     else bar.classList.add('default');
   });
 }
 
-// ─── LAUNCH ───────────────────────────────────────────────
-function launch() {
-  const nums = generateNumbers();
-  if (!nums) { alert('Please enter valid numbers first.'); return; }
-  const info = ALGO_INFO[state.algo];
-  state.numbers = nums;
-  state.steps = generateSteps(nums, state.algo);
-  state.stepIdx = 0;
-  state.comparisons = 0;
-  state.swaps = 0;
-  state.playing = false;
-  state.done = false;
-  sortedIndices = new Set();
-  clearInterval(state.timer);
-
-  document.getElementById('viz-algo-name').textContent = info.name;
-  document.getElementById('stat-elems').textContent = nums.length;
-  document.getElementById('stat-comps').textContent = '0';
-  document.getElementById('stat-swaps').textContent = '0';
-  document.getElementById('c-best').textContent = info.best;
-  document.getElementById('c-avg').textContent = info.avg;
-  document.getElementById('c-worst').textContent = info.worst;
-  document.getElementById('c-space').textContent = info.space;
-  document.getElementById('c-stable').textContent = info.stable;
-  document.getElementById('algo-desc').textContent = info.desc;
-  document.getElementById('progress-bar').style.width = '0%';
-  document.getElementById('status-line').textContent = 'Ready — press Play to begin.';
-  document.getElementById('status-line').className = 'status-line';
-  document.getElementById('btn-play').textContent = '▶ Play';
-
-  const viz = document.getElementById('visualizer');
-  viz.style.display = 'block';
-  viz.classList.add('fade-in');
-  viz.scrollIntoView({ behavior: 'smooth' });
-
-  renderBars(nums, [], new Set());
+// ─── LOG ────────────────────────────────────────────────────────────────
+function addLog(type,idxs){
+  if(S.logCount>2000)return;
+  S.logCount++;
+  document.getElementById('log-count').textContent=S.logCount+' ops';
+  const body=document.getElementById('log-body');
+  if(body.children.length>100)body.removeChild(body.lastChild);
+  const row=document.createElement('div');row.className='log-row';
+  const typeLabel=type==='c'?'compare':type==='s'?'swap':type==='m'?'sorted':type==='p'?'pivot':'—';
+  const typeClass=type==='c'?'compare':type==='s'?'swap':'sorted';
+  row.innerHTML=`<span class="li">#${S.logCount}</span><span class="log-type ${typeClass}">${typeLabel}</span><span style="color:var(--muted)">${idxs.length?'pos '+idxs.join(', '):''}</span>`;
+  body.insertBefore(row,body.firstChild);
 }
 
-// ─── STEP ────────────────────────────────────────────────
-function applyStep() {
-  if (state.stepIdx >= state.steps.length) { finishSort(); return; }
-  const step = state.steps[state.stepIdx++];
-  const pct = Math.round((state.stepIdx / state.steps.length) * 100);
-  document.getElementById('progress-bar').style.width = pct + '%';
-
-  if (step.type === 'compare') { state.comparisons++; document.getElementById('stat-comps').textContent = state.comparisons; }
-  if (step.type === 'swap') { state.swaps++; document.getElementById('stat-swaps').textContent = state.swaps; }
-  if (step.type === 'sorted-mark') { step.idx.forEach(i => sortedIndices.add(i)); }
-  if (step.type === 'done') { finishSort(); return; }
-
-  renderBars(step.arr, step.idx || [], sortedIndices);
-  document.getElementById('status-line').textContent = step.type === 'compare' ? `Comparing positions ${step.idx.join(' and ')}` : step.type === 'swap' ? `Swap at position${step.idx.length > 1 ? 's ' + step.idx.join(', ') : ' ' + step.idx[0]}` : step.type === 'pivot' ? `Pivot selected at position ${step.idx[0]}` : '...';
+// ─── LAUNCH ────────────────────────────────────────────────────────────
+function launch(){
+  const nums=generateNumbers();
+  if(!nums){alert('Please enter valid numbers first.');return;}
+  if(S.algo==='bogo'&&nums.length>10&&!confirm('Bogo sort with '+nums.length+' elements could take forever. Use ≤8 for best results. Continue anyway?'))return;
+  const info=ALGO_INFO[S.algo];
+  S.numbers=[...nums];S.steps=generateSteps(nums,S.algo);S.stepIdx=0;
+  S.comparisons=0;S.swaps=0;S.playing=false;S.done=false;S.logCount=0;
+  sortedIndices=new Set();
+  clearInterval(S.timer);
+  document.getElementById('viz-algo-name').textContent=info.name;
+  document.getElementById('viz-algo-tag').textContent=info.tag;
+  document.getElementById('stat-elems').textContent=nums.length;
+  document.getElementById('stat-comps').textContent='0';
+  document.getElementById('stat-swaps').textContent='0';
+  document.getElementById('stat-pct').textContent='0%';
+  document.getElementById('c-best').textContent=info.best;
+  document.getElementById('c-avg').textContent=info.avg;
+  document.getElementById('c-worst').textContent=info.worst;
+  document.getElementById('c-space').textContent=info.space;
+  document.getElementById('c-stable').textContent=info.stable;
+  document.getElementById('c-inplace').textContent=info.inplace;
+  document.getElementById('algo-desc').textContent=info.desc;
+  const ul=document.getElementById('use-cases');ul.innerHTML='';
+  info.uses.forEach(u=>{const li=document.createElement('li');li.textContent=u;ul.appendChild(li);});
+  document.getElementById('progress-bar').style.width='0%';
+  document.getElementById('status-line').textContent='Ready — press Play or Step.';
+  document.getElementById('status-line').className='status-line';
+  document.getElementById('btn-play').textContent='▶ Play';
+  document.getElementById('btn-step-viz').disabled=false;
+  document.getElementById('log-body').innerHTML='';
+  document.getElementById('log-count').textContent='0 ops';
+  const viz=document.getElementById('visualizer');
+  viz.style.display='block';viz.classList.add('fade-in');
+  viz.scrollIntoView({behavior:'smooth'});
+  renderBars(nums,[],new Set());
 }
 
-function finishSort() {
-  state.done = true;
-  state.playing = false;
-  clearInterval(state.timer);
-  document.getElementById('btn-play').textContent = '▶ Play';
-  document.getElementById('progress-bar').style.width = '100%';
-  const finalArr = state.steps[state.steps.length - 1].arr;
-  sortedIndices = new Set(finalArr.map((_,i)=>i));
-  renderBars(finalArr, [], sortedIndices);
-  const sl = document.getElementById('status-line');
-  sl.textContent = `✓ Sorted in ${state.comparisons} comparisons and ${state.swaps} swaps.`;
-  sl.className = 'status-line done';
+// ─── STEP ───────────────────────────────────────────────────────────────
+function applyStep(){
+  if(S.stepIdx>=S.steps.length){finishSort();return;}
+  const step=S.steps[S.stepIdx++];
+  const pct=Math.round((S.stepIdx/S.steps.length)*100);
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('stat-pct').textContent=pct+'%';
+  if(step.t==='c'){S.comparisons++;document.getElementById('stat-comps').textContent=S.comparisons;}
+  if(step.t==='s'){S.swaps++;document.getElementById('stat-swaps').textContent=S.swaps;}
+  if(step.t==='m'){step.i.forEach(x=>sortedIndices.add(x));}
+  if(step.t==='done'){finishSort();return;}
+  addLog(step.t,step.i||[]);
+  const pivot=step.t==='p'?step.i:[];
+  renderBars(step.a,step.t==='c'||step.t==='s'?step.i:[],sortedIndices,pivot);
+  const msgs={c:'Comparing positions '+(step.i||[]).join(' and '),s:'Swap at '+(step.i||[]).map(x=>'pos '+x).join(' ↔ '),m:'Marked sorted: pos '+(step.i||[]).join(', '),p:'Pivot selected at pos '+(step.i||[]).join(', ')};
+  document.getElementById('status-line').textContent=msgs[step.t]||'...';
 }
 
-function stepOnce() { if (!state.done) applyStep(); }
-
-function playPause() {
-  if (state.done) return;
-  state.playing = !state.playing;
-  document.getElementById('btn-play').textContent = state.playing ? '⏸ Pause' : '▶ Play';
-  if (state.playing) {
-    const delay = parseInt(document.getElementById('viz-speed').value);
-    if (delay === 0) { while(!state.done) applyStep(); return; }
-    state.timer = setInterval(() => { if (state.done || !state.playing) { clearInterval(state.timer); return; } applyStep(); }, delay);
-  } else {
-    clearInterval(state.timer);
-  }
+function finishSort(){
+  S.done=true;S.playing=false;clearInterval(S.timer);
+  document.getElementById('btn-play').textContent='▶ Play';
+  document.getElementById('btn-step-viz').disabled=true;
+  document.getElementById('progress-bar').style.width='100%';
+  document.getElementById('stat-pct').textContent='100%';
+  const finalArr=S.steps[S.steps.length-1].a;
+  sortedIndices=new Set(finalArr.map((_,i)=>i));
+  renderBars(finalArr,[],sortedIndices);
+  const sl=document.getElementById('status-line');
+  sl.textContent='✓ Done! '+S.comparisons+' comparisons, '+S.swaps+' swaps.';
+  sl.className='status-line done';
 }
 
-function resetViz() {
-  clearInterval(state.timer);
-  state.steps = generateSteps(state.numbers, state.algo);
-  state.stepIdx = 0; state.comparisons = 0; state.swaps = 0;
-  state.playing = false; state.done = false; sortedIndices = new Set();
-  document.getElementById('btn-play').textContent = '▶ Play';
-  document.getElementById('stat-comps').textContent = '0';
-  document.getElementById('stat-swaps').textContent = '0';
-  document.getElementById('progress-bar').style.width = '0%';
-  document.getElementById('status-line').textContent = 'Reset — press Play to begin.';
-  document.getElementById('status-line').className = 'status-line';
-  renderBars(state.numbers, [], new Set());
+function stepOnce(){if(!S.done)applyStep();}
+
+function playPause(){
+  if(S.done)return;
+  S.playing=!S.playing;
+  document.getElementById('btn-play').textContent=S.playing?'⏸ Pause':'▶ Play';
+  if(S.playing){
+    const delay=parseInt(document.getElementById('viz-speed').value);
+    if(delay===0){while(!S.done)applyStep();return;}
+    S.timer=setInterval(()=>{if(S.done||!S.playing){clearInterval(S.timer);return;}applyStep();},delay);
+  }else{clearInterval(S.timer);}
 }
 
-document.getElementById('viz-speed').addEventListener('input', function() {
-  document.getElementById('viz-speed-label').textContent = this.value + 'ms';
-  if (state.playing) { clearInterval(state.timer); state.playing = false; document.getElementById('btn-play').textContent = '▶ Play'; playPause(); }
-});
+function resetViz(){
+  clearInterval(S.timer);
+  S.steps=generateSteps(S.numbers,S.algo);
+  S.stepIdx=0;S.comparisons=0;S.swaps=0;S.playing=false;S.done=false;S.logCount=0;
+  sortedIndices=new Set();
+  document.getElementById('btn-play').textContent='▶ Play';
+  document.getElementById('btn-step-viz').disabled=false;
+  document.getElementById('stat-comps').textContent='0';
+  document.getElementById('stat-swaps').textContent='0';
+  document.getElementById('stat-pct').textContent='0%';
+  document.getElementById('progress-bar').style.width='0%';
+  document.getElementById('status-line').textContent='Reset — press Play.';
+  document.getElementById('status-line').className='status-line';
+  document.getElementById('log-body').innerHTML='';
+  document.getElementById('log-count').textContent='0 ops';
+  renderBars(S.numbers,[],new Set());
+}
+
+function reshuffleAndReset(){
+  clearInterval(S.timer);
+  const nums=generateNumbers();
+  if(!nums)return;
+  S.numbers=[...nums];
+  resetViz();
+  S.steps=generateSteps(S.numbers,S.algo);
+  renderBars(S.numbers,[],new Set());
+}
+
+function onSpeedChange(){
+  const v=document.getElementById('viz-speed').value;
+  document.getElementById('viz-speed-label').textContent=v+'ms';
+  if(S.playing){clearInterval(S.timer);S.playing=false;document.getElementById('btn-play').textContent='▶ Play';playPause();}
+}
 </script>
 </body>
 </html>
